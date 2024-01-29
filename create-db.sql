@@ -21,7 +21,7 @@ CREATE TABLE LIEUX (
                        rue             VARCHAR(30),
                        latitude           FLOAT,
                        longitude          FLOAT,
-                       villes_no_ville   INTEGER NOT NULL,
+                       villes_no_ville   INTEGER NOT NULL
 );
 
 ALTER TABLE LIEUX ADD constraint lieux_pk PRIMARY KEY  (no_lieu);
