@@ -1,7 +1,7 @@
 CREATE TABLE ETATS (
                        no_etat   INTEGER NOT NULL,
                        libelle   VARCHAR(30) NOT NULL
-);
+)ENGINE=InnoDB;
 
 ALTER TABLE ETATS ADD constraint etats_pk PRIMARY KEY (no_etat);
 
@@ -10,7 +10,7 @@ CREATE TABLE INSCRIPTIONS (
                               date_inscription              DATETIME NOT NULL,
                               sorties_no_sortie             INTEGER NOT NULL,
                               participants_no_participant   INTEGER NOT NULL
-);
+)ENGINE=InnoDB;
 
 ALTER TABLE INSCRIPTIONS ADD constraint inscriptions_pk PRIMARY KEY  (SORTIES_no_sortie, PARTICIPANTS_no_participant);
 
@@ -22,7 +22,7 @@ CREATE TABLE LIEUX (
                        latitude           FLOAT,
                        longitude          FLOAT,
                        villes_no_ville   INTEGER NOT NULL
-);
+)ENGINE=InnoDB;
 
 ALTER TABLE LIEUX ADD constraint lieux_pk PRIMARY KEY  (no_lieu);
 
@@ -38,7 +38,7 @@ CREATE TABLE PARTICIPANTS (
                               administrateur   bit NOT NULL,
                               actif            bit NOT NULL,
                               sites_no_site    INTEGER NOT NULL
-);
+)ENGINE=InnoDB;
 
 ALTER TABLE PARTICIPANTS ADD constraint participants_pk PRIMARY KEY  (no_participant);
 
@@ -47,7 +47,7 @@ ALTER TABLE PARTICIPANTS add constraint participants_pseudo_uk unique (pseudo);
 CREATE TABLE SITES (
                        no_site       INTEGER NOT NULL,
                        nom_site      VARCHAR(30) NOT NULL
-);
+)ENGINE=InnoDB;
 
 ALTER TABLE SITES ADD constraint sites_pk PRIMARY KEY (no_site);
 
@@ -64,7 +64,7 @@ CREATE TABLE SORTIES (
                          organisateur                  INTEGER NOT NULL,
                          lieux_no_lieu                 INTEGER NOT NULL,
                          etats_no_etat                 INTEGER NOT NULL
-);
+)ENGINE=InnoDB;
 
 ALTER TABLE SORTIES ADD constraint sorties_pk PRIMARY KEY  (no_sortie);
 
@@ -72,7 +72,7 @@ CREATE TABLE VILLES (
                         no_ville      INTEGER NOT NULL,
                         nom_ville     VARCHAR(30) NOT NULL,
                         code_postal   VARCHAR(10) NOT NULL
-);
+)ENGINE=InnoDB;
 
 ALTER TABLE VILLES ADD constraint villes_pk PRIMARY KEY  (no_ville);
 
