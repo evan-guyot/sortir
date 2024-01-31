@@ -48,7 +48,7 @@ class SortieController extends AbstractController
     }
   
     #[Route('/create', name: 'app_sortie_create')]
-        public function index(Request $request, ParticipantRepository $participantRepository, EtatRepository $etatRepository, EntityManagerInterface $entityManager): Response
+        public function create(Request $request, ParticipantRepository $participantRepository, EtatRepository $etatRepository, EntityManagerInterface $entityManager): Response
         {
             $participant = $participantRepository->find(1);
 
