@@ -7,23 +7,24 @@
             <div>Participant : {{ user.prenom }} {{ user.nom }}</div>
         </div>
     </div>
-    <div>
+    <form action="{{ path('app_sortie') }}" method="get">
         <div class="Title">Filtrer les sorties</div>
         <div class="flex">
 
             <div class="Layout-column-start-start">
                 <div class="Layout-row-start-center">
                     <div>Site :</div>
-                    <select>
+                    <select name="site">
+                        <option value="All">All</option>
                         {% for site in sites %}
-                            <option value="{{ site.id }}">{{ site.nom }}</option>
+                            <option value="{{ site.nom }}">{{ site.nom }}</option>
                         {% endfor %}
                     </select>
                 </div>
                 <div class="Layout-row-start-center">
                     <div>Le nom de la sortie contient:</div>
                     <label>
-                        <input/>
+                        <input type="text" name="motclef"/>
                     </label>
                 </div>
                 <div class="Layout-row-start-center">
@@ -48,13 +49,13 @@
                     <div>Sorties auxquelles je ne suis pas inscrit</div>
                 </div>
                 <div class="Layout-row-start-center">
-                    <input type="checkbox" name="cb3"/>
+                    <input type="checkbox" name="cb4"/>
                     <div>Sorties passées</div>
                 </div>
             </div>
-            <input class="Big-Btn" type="button" value="Rechercher">
+            <input class="Big-Btn" type="submit" value="Rechercher">
         </div>
-    </div>
+    </form>
 
     <div>
         <table>
@@ -73,7 +74,6 @@
             <tbody>
             {% for sortie in sorties %}
                 <tr>
-
                     <td>{{ sortie.nom }}</td>
                     <td>{{ sortie.datedebut|date('Y-m-d') }}</td>
                     <td>{{ sortie.datecloture|date('Y-m-d') }}</td>
@@ -122,7 +122,6 @@
                         {% endif %}
 
                     </td>
-
 
                 </tr>
             {% endfor %}
