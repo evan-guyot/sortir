@@ -65,3 +65,11 @@ tbody > tr:nth-of-type(even) {
     background-color: rgb(237 238 242);
 }
 
+
+.serie-form-container{
+    margin: 1em auto;
+    max-width: 800px;
+    width: 95%;
+    font: 18px/1.5 sans-serif;
+}
+

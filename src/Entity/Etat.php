@@ -21,9 +21,10 @@ class Etat
     #[ORM\OneToMany(mappedBy: 'etat', targetEntity: Sortie::class)]
     private Collection $sorties;
 
-    public function __construct()
+    public function __construct(?string $libelle = null)
     {
         $this->sorties = new ArrayCollection();
+        $this->libelle = $libelle;
     }
 
     public function getId(): ?int

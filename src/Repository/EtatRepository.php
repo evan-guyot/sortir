@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Etat;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -19,6 +20,23 @@ class EtatRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Etat::class);
+    }
+
+    public function getOrMakeEtat(string $value, EntityManagerInterface $entityManager)
+    {
+        $etat = $this->createQueryBuilder('e')
+            ->andWhere( true ? 'e.libelle = :val' : '')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        if ($etat == null) {
+            $etat = new Etat($value);
+            $entityManager->persist($etat);
+            $entityManager->flush();
+        }
+
+        return $etat;
     }
 
 //    /**

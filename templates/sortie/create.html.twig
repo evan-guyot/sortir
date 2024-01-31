@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello SortieController!{% endblock %}
+
+{% block body %}
+    <div class="serie-form-container">
+        <h1>Créer une sortie</h1>
+        <div>
+            {{ form_start(site_form) }}
+            {{ form_end(site_form) }}
+        </div>
+        {{ form_start(sortie_form) }}
+        <div style="display: flex; flex-direction: column;">
+            <div style="display: flex; flex-direction: row; justify-content: space-around">
+                <div>
+                    {{ form_row(sortie_form.nom) }}
+                    {{ form_row(sortie_form.datedebut) }}
+                    {{ form_row(sortie_form.datecloture) }}
+                    {{ form_row(sortie_form.inscriptionsmax) }}
+                    {{ form_row(sortie_form.duree) }}
+                    {{ form_row(sortie_form.description) }}
+                </div>
+                <div>
+                    {{ form_row(sortie_form.lieu, { 'id': 'lieuSelect'}) }}
+                    {{ form_row(sortie_form.urlphoto) }}
+
+                </div>
+            </div>
+            <div style="display: flex; flex-direction: row">
+                {{ form_row(sortie_form.enregister) }}
+                {{ form_row(sortie_form.publier) }}
+                {{ form_row(sortie_form.annuler) }}
+
+            </div>
+        </div>
+
+        {{ form_end(sortie_form) }}
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Add event listener to the select element
+        document.getElementById('villeSelect').addEventListener('change', function () {
+            console.log("triggered")
+            var selectedValue = this.value; // Get the selected value
+
+            // Send AJAX request
+            $.ajax({
+                url: '{{ path('app_sortie_create') }}',
+                method: 'POST',
+                data: {
+                    selectedValue: selectedValue
+                },
+                success: function (response) {
+                    console.log("success")
+                },
+                error: function (xhr, status, error) {
+                    console.log("error")
+                }
+            });
+        });
+    </script>
+{% endblock %}

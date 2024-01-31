@@ -1,0 +1,74 @@
+-- Insertions des sites
+INSERT INTO site (nom) VALUES ('Saint Herblain');
+INSERT INTO site (nom) VALUES ('Rennes');
+INSERT INTO site (nom) VALUES ('Quimper');
+INSERT INTO site (nom) VALUES ('Niort');
+
+-- Insertion des villes
+INSERT INTO ville (nom, code_postal) VALUES
+('Saint Herblain', '44800'),
+('Rennes', '35000'),
+('Quimper', '29000'),
+('Niort', '79000');
+
+-- Insertion de participants
+INSERT INTO participant (site_id, pseudo, roles, nom, prenom, telephone, mail, motdepasse, administrateur, actif)
+VALUES
+(1, 'participant1', '[]', 'Nom1', 'Prenom1', '0123456789', 'participant1@example.com', 'password', 0, 1),
+(2, 'participant2', '[]', 'Nom2', 'Prenom2', '0123456789', 'participant2@example.com', 'password', 0, 1),
+(3, 'participant3', '[]', 'Nom3', 'Prenom3', '0123456789', 'participant3@example.com', 'password', 0, 1),
+(4, 'participant4', '[]', 'Nom4', 'Prenom4', '0123456789', 'participant4@example.com', 'password', 0, 1),
+(1, 'participant5', '[]', 'Nom5', 'Prenom5', '0123456789', 'participant5@example.com', 'password', 0, 1),
+(2, 'participant6', '[]', 'Nom6', 'Prenom6', '0123456789', 'participant6@example.com', 'password', 0, 1),
+(3, 'participant7', '[]', 'Nom7', 'Prenom7', '0123456789', 'participant7@example.com', 'password', 0, 1),
+(4, 'participant8', '[]', 'Nom8', 'Prenom8', '0123456789', 'participant8@example.com', 'password', 0, 1);
+
+-- Insertion de lieux
+INSERT INTO lieu (ville_id, nom, rue, latitude, longitude)
+VALUES
+(1, 'Bar Saint Herblain 1', 'Rue du Bar 1', 47.211234, -1.643667),
+(1, 'Bar Saint Herblain 2', 'Rue du Bar 2', 47.212345, -1.644678),
+(1, 'Centre Aquatique Saint Herblain', 'Avenue de la Piscine', 47.209876, -1.646789),
+(1, 'Musée Saint Herblain', 'Rue du Musée 1', 47.211987, -1.645890),
+(2, 'Bar Rennes 1', 'Rue du Bar 1', 48.113456, -1.648901),
+(2, 'Bar Rennes 2', 'Rue du Bar 2', 48.114567, -1.647012),
+(2, 'Centre Aquatique Rennes', 'Avenue de la Piscine', 48.112345, -1.645123),
+(2, 'Musée Rennes', 'Rue du Musée 1', 48.111234, -1.644234),
+(3, 'Bar Quimper 1', 'Rue du Bar 1', 47.994567, -4.097890),
+(3, 'Bar Quimper 2', 'Rue du Bar 2', 47.995678, -4.096901),
+(3, 'Centre Aquatique Quimper', 'Avenue de la Piscine', 47.993456, -4.095012),
+(3, 'Musée Quimper', 'Rue du Musée 1', 47.992345, -4.094123),
+(4, 'Bar Niort 1', 'Rue du Bar 1', 46.321987, -0.458901),
+(4, 'Bar Niort 2', 'Rue du Bar 2', 46.322345, -0.457012),
+(4, 'Centre Aquatique Niort', 'Avenue de la Piscine', 46.319876, -0.455123),
+(4, 'Musée Niort', 'Rue du Musée 1', 46.321012, -0.454234);
+
+-- Insertion d'états
+INSERT INTO etat (libelle) VALUES
+('En cours'),
+('Fermé'),
+('Ouvert');
+
+-- Insertion de sorties
+INSERT INTO sortie (lieu_id, organisateur_id, etat_id, nom, datedebut, duree, datecloture, inscriptionsmax, description, urlphoto)
+VALUES
+(1, 1, 1, 'Sortie 1', '2024-01-30 14:00:00', 120, '2024-01-29 18:00:00', 10, 'Description sortie 1', 'photo1.jpg'),
+(2, 2, 1, 'Sortie 2', '2024-02-01 15:30:00', 90, '2024-01-29 20:00:00', 15, 'Description sortie 2', 'photo2.jpg'),
+(3, 3, 2, 'Sortie 3', '2024-02-03 16:45:00', 75, '2024-01-29 22:00:00', 20, 'Description sortie 3', 'photo3.jpg'),
+(4, 4, 2, 'Sortie 4', '2024-02-05 18:00:00', 60, '2024-01-29 23:00:00', 8, 'Description sortie 4', 'photo4.jpg'),
+(1, 5, 3, 'Sortie 5', '2024-02-08 14:30:00', 120, '2024-01-30 18:00:00', 12, 'Description sortie 5', 'photo5.jpg'),
+(2, 6, 3, 'Sortie 6', '2024-02-10 16:00:00', 90, '2024-01-30 20:00:00', 18, 'Description sortie 6', 'photo6.jpg'),
+(3, 7, 1, 'Sortie 7', '2024-02-12 17:15:00', 75, '2024-01-30 22:00:00', 22, 'Description sortie 7', 'photo7.jpg'),
+(4, 8, 1, 'Sortie 8', '2024-02-15 19:00:00', 60, '2024-01-30 23:00:00', 10, 'Description sortie 8', 'photo8.jpg');
+
+-- Insertion d'inscriptions
+INSERT INTO inscription (participant_id, sortie_id, date_inscription)
+VALUES
+(1, 1, '2024-01-29 16:30:00'),
+(2, 1, '2024-01-29 16:45:00'),
+(3, 2, '2024-01-29 17:00:00'),
+(4, 2, '2024-01-29 17:15:00'),
+(5, 3, '2024-01-29 17:30:00'),
+(6, 3, '2024-01-29 17:45:00'),
+(7, 4, '2024-01-29 18:00:00'),
+(8, 4, '2024-01-29 18:15:00');
