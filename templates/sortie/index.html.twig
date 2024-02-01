@@ -88,7 +88,7 @@
                         {% endfor %}
                     </td>
                     <td>{{ sortie.getOrganisateur().pseudo }}</td>
-                    <td class="txt-start">
+                    <td class="txt-start Layout-row-start-center">
                         {% if sortie.getEtat().libelle != 'En création' %}
                             <input type="button" value="Afficher">
                         {% endif %}
@@ -109,7 +109,6 @@
                             - <input type="button" value="Se désister">
                         {% endif %}
 
-
                         {% set isUserRegistered = false %}
 
                         {% for inscription in sortie.getInscriptions() %}
@@ -118,8 +117,11 @@
                             {% endif %}
                         {% endfor %}
 
-                        {% if (not isUserRegistered) and sortie.getEtat().libelle == 'Ouvert' and sortie.datecloture|date('U') > today|date('U') %}
-                            - <input type="button" value="S'inscrire">
+                        {% if (not isUserRegistered) and sortie.getEtat().libelle == 'Ouvert' and sortie.datecloture|date('U') > today|date('U') and sortie.getInscriptions().count() < sortie.inscriptionsmax %}
+                            - <form action="{{ path('app_sortie') }}" method="post" >
+                                <input type="hidden" name="sinscrireid" value="{{ sortie.id }}">
+                                <button type="submit">S'inscrire</button>
+                            </form>
                         {% endif %}
 
                     </td>
