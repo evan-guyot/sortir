@@ -87,7 +87,7 @@
                             {% endif %}
                         {% endfor %}
                     </td>
-                    <td>{{ sortie.getOrganisateur().pseudo }}</td>
+                    <td><a href={{ path('app_participant_id', {'id': sortie.getOrganisateur().id })}}>{{ sortie.getOrganisateur().pseudo }}</a></td>
                     <td class="txt-start">
                         {% if sortie.getEtat().libelle != 'En création' %}
                             <input type="button" value="Afficher">
