@@ -1,4 +1,5 @@
 {% extends 'base.html.twig' %}
+{% set showExtendedNavbar = true %}
 
 {% block body %}
     <div class="Layout-row-end-center">
@@ -128,5 +129,5 @@
             </tbody>
         </table>
     </div>
-    <input type="button" value="Créer une sortie">
+    <a href="{{ path('app_sortie_create') }}" class="btn btn-primary active" aria-current="page">Créer une sortie</a>
 {% endblock %}

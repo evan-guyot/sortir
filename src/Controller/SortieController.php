@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Participant;
 use App\Entity\Sortie;
 use App\Form\AjoutSortieType;
 use App\Form\SiteType;
@@ -16,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/sortie')]
+#[Route('/')]
 class SortieController extends AbstractController
 {
     #[Route('', name: 'app_sortie')]
@@ -47,7 +46,7 @@ class SortieController extends AbstractController
         ]);
     }
   
-    #[Route('/create', name: 'app_sortie_create')]
+    #[Route('/sortie/create', name: 'app_sortie_create')]
         public function create(Request $request, ParticipantRepository $participantRepository, EtatRepository $etatRepository, EntityManagerInterface $entityManager): Response
         {
             $participant = $participantRepository->find(1);
@@ -77,7 +76,7 @@ class SortieController extends AbstractController
 
                     $this->addFlash("success", "Votre sortie à bien été enregistrée");
 
-                    return $this->redirectToRoute('app_sortie_create');
+                    return $this->redirectToRoute('app_sortie');
                 } else {
                     $this->addFlash("error", "Merci de remplir correctement tous les champs");
                 }
