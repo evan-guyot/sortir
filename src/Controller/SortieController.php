@@ -38,6 +38,24 @@ class SortieController extends AbstractController
 
         if ($request->isMethod('POST')) {
             $sortieidinscription = $request->request->get('sinscrireid');
+            $sortieiddesister = $request->request->get('desisterid');
+
+            if ($sortieiddesister !== null) {
+
+                $inscription = $inscriptionRepository->findOneBy([
+                    'sortie' => $sortieiddesister,
+                    'participant' => $user->getId(),
+                ]);
+
+                if (!$inscription) {
+                    throw new NotFoundHttpException('Inscription non trouvée.');
+                }
+
+                $entityManager->remove($inscription);
+                $entityManager->flush();
+
+            }
+
 
             if ($sortieidinscription !== null) {
                 $inscription = new Inscription();
