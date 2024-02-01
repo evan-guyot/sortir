@@ -106,7 +106,10 @@
                         {% endfor %}
 
                         {% if isUserRegistered and sortie.getEtat().libelle == 'Ouvert' %}
-                            - <input type="button" value="Se désister">
+                            - <form action="{{ path('app_sortie') }}" method="post" >
+                            <input type="hidden" name="desisterid" value="{{ sortie.id }}">
+                            <button type="submit">Se désister</button>
+                        </form>
                         {% endif %}
 
                         {% set isUserRegistered = false %}
