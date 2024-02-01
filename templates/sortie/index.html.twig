@@ -126,9 +126,11 @@
                         {% endfor %}
 
                         {% if isUserRegistered and sortie.getEtat().libelle == 'Ouvert' %}
-                            - <input type="button" value="Se désister" class="form-control">
+                            - <form action="{{ path('app_sortie') }}" method="post" >
+                            <input type="hidden" name="desisterid" value="{{ sortie.id }}">
+                            <button type="submit" class="form-control">Se désister</button>
+                        </form>
                         {% endif %}
-
 
                         {% set isUserRegistered = false %}
 
@@ -138,8 +140,15 @@
                             {% endif %}
                         {% endfor %}
 
-                        {% if (not isUserRegistered) and sortie.getEtat().libelle == 'Ouvert' and sortie.datecloture|date('U') > today|date('U') %}
-                            - <input type="button" value="S'inscrire" class="form-control">
+                        {% if (not isUserRegistered) and sortie.getEtat().libelle == 'Ouvert' and sortie.datecloture|date('U') > today|date('U') and sortie.getInscriptions().count() < sortie.inscriptionsmax %}
+                            - <form action="{{ path('app_sortie') }}" method="post" >
+                                <input type="hidden" name="sinscrireid" value="{{ sortie.id }}">
+                                <button type="submit" class="form-control">S'inscrire</button>
+                            </form>
+                        {% endif %}
+
+                        {% if user.id == sortie.getOrganisateur().id and sortie.getEtat().libelle == 'En création' %}
+                            <input type="button" value="Modifier"> - <input type="button" value="Publier">
                         {% endif %}
 
                     </td>
