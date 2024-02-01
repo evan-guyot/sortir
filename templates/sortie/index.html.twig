@@ -118,7 +118,7 @@
                             {% endif %}
                         {% endfor %}
 
-                        {% if not isUserRegistered and sortie.getEtat().libelle == 'Ouvert' %}
+                        {% if (not isUserRegistered) and sortie.getEtat().libelle == 'Ouvert' and sortie.datecloture|date('U') > today|date('U') %}
                             - <input type="button" value="S'inscrire">
                         {% endif %}
 
