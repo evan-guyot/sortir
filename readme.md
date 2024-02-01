@@ -7,3 +7,5 @@ administrateurs.
 
 Les sorties, ainsi que les participants ont un site de rattachement, pour permettre une
 organisation géographique des sorties.
+
+- [Trello](https://trello.com/b/WP1vNDRC/sortircom) pour savoir quels sont les tickets de fonctionnalités et qui à fait le ticket.
