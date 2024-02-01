@@ -36,7 +36,6 @@ class SortieController extends AbstractController
 
         $sorties = $sortieRepository->findWithFilters($user, $cb1, $cb2, $cb3, $cb4, $site,$motclef, $dateDebut, $dateFin);
 
-
         return $this->render('sortie/index.html.twig', [
             'controller_name' => 'SortieController',
             'sites' => $sites,
