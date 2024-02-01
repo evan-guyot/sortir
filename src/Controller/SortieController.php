@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Inscription;
 use App\Entity\Sortie;
 use App\Form\AjoutSortieType;
 use App\Form\SiteType;
 use App\Repository\EtatRepository;
+use App\Repository\InscriptionRepository;
 use App\Repository\SiteRepository;
 use App\Repository\SortieRepository;
 use App\Repository\ParticipantRepository;
@@ -19,7 +21,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class SortieController extends AbstractController
 {
     #[Route('', name: 'app_sortie')]
-    public function index(Request $request, SiteRepository $siteRepository, SortieRepository $sortieRepository, ParticipantRepository $participantRepository): Response
+    public function index(Request $request, EntityManagerInterface $entityManager, SiteRepository $siteRepository, SortieRepository $sortieRepository, ParticipantRepository $participantRepository, InscriptionRepository $inscriptionRepository): Response
     {
         $user = $participantRepository->find(5);
         $today = time();
@@ -33,6 +35,25 @@ class SortieController extends AbstractController
         $motclef = $request->query->get('motclef', '');
         $dateDebut = $request->query->get('dateDebut', null);
         $dateFin = $request->query->get('dateFin', null);
+
+        if ($request->isMethod('POST')) {
+            $sortieidinscription = $request->request->get('sinscrireid');
+
+            if ($sortieidinscription !== null) {
+                $inscription = new Inscription();
+                $sortie = $sortieRepository->find($sortieidinscription);
+                $now = new \DateTime();
+
+                $inscription->setSortie($sortie);
+                $inscription->setParticipant($user);
+                $inscription->setDateInscription($now);
+
+                $entityManager->persist($inscription);
+                $entityManager->flush();
+            }
+
+            return $this->redirectToRoute('app_sortie');
+        }
 
         $sorties = $sortieRepository->findWithFilters($user, $cb1, $cb2, $cb3, $cb4, $site,$motclef, $dateDebut, $dateFin);
 
