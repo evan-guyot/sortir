@@ -127,6 +127,10 @@
                             </form>
                         {% endif %}
 
+                        {% if user.id == sortie.getOrganisateur().id and sortie.getEtat().libelle == 'En création' %}
+                            <input type="button" value="Modifier"> - <input type="button" value="Publier">
+                        {% endif %}
+
                     </td>
 
                 </tr>

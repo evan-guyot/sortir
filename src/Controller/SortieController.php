@@ -80,17 +80,20 @@ class SortieController extends AbstractController
 
             $todayDate = $today->format('Y-m-d');
             $sortieDate = $sortie->getDatedebut()->format('Y-m-d');
+            if ($sortie->getEtat()->getLibelle() != 'En création') {
 
-            // Comparer les dates
-            if ($todayDate > $sortieDate) {
-                $etat = 2; // Fermé
-            } elseif ($todayDate == $sortieDate) {
-                $etat = 1; // En cours
-            } else {
-                $etat = 3; // Ouvert
+                // Comparer les dates
+                if ($todayDate > $sortieDate) {
+                    $etat = $etatRepository->getOrMakeEtat('Fermé', $entityManager); // Fermé
+                } elseif ($todayDate == $sortieDate) {
+                    $etat = $etatRepository->getOrMakeEtat('En cours', $entityManager); // En cours
+                } else {
+                    $etat = $etatRepository->getOrMakeEtat('Ouvert', $entityManager); // Ouvert
+                }
+
+                $sortie->setEtat($etatRepository->find($etat));
             }
 
-            $sortie->setEtat($etatRepository->find($etat));
         }
         $entityManager->flush();
 
