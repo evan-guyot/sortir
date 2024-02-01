@@ -21,10 +21,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class SortieController extends AbstractController
 {
     #[Route('', name: 'app_sortie')]
-    public function index(Request $request, EntityManagerInterface $entityManager, SiteRepository $siteRepository, SortieRepository $sortieRepository, ParticipantRepository $participantRepository, InscriptionRepository $inscriptionRepository): Response
+    public function index(Request $request, EntityManagerInterface $entityManager, SiteRepository $siteRepository, SortieRepository $sortieRepository, ParticipantRepository $participantRepository, InscriptionRepository $inscriptionRepository, EtatRepository $etatRepository): Response
     {
         $user = $participantRepository->find(5);
-        $today = time();
+        $today = new \DateTime();;
         $sites = $siteRepository->findAll();
 
         $cb1 = $request->query->get('cb1', false);
@@ -73,7 +73,30 @@ class SortieController extends AbstractController
             return $this->redirectToRoute('app_sortie');
         }
 
-        $sorties = $sortieRepository->findWithFilters($user, $cb1, $cb2, $cb3, $cb4, $site,$motclef, $dateDebut, $dateFin);
+        $sorties = $sortieRepository->findWithFilters($user, $cb1, $cb2, $cb3, $cb4, $site, $motclef, $dateDebut, $dateFin);
+
+
+        foreach ($sorties as $sortie) {
+
+            $todayDate = $today->format('Y-m-d');
+            $sortieDate = $sortie->getDatedebut()->format('Y-m-d');
+            if ($sortie->getEtat()->getLibelle() != 'En création') {
+
+                // Comparer les dates
+                if ($todayDate > $sortieDate) {
+                    $etat = $etatRepository->getOrMakeEtat('Fermé', $entityManager); // Fermé
+                } elseif ($todayDate == $sortieDate) {
+                    $etat = $etatRepository->getOrMakeEtat('En cours', $entityManager); // En cours
+                } else {
+                    $etat = $etatRepository->getOrMakeEtat('Ouvert', $entityManager); // Ouvert
+                }
+
+                $sortie->setEtat($etatRepository->find($etat));
+            }
+
+        }
+        $entityManager->flush();
+
 
         return $this->render('sortie/index.html.twig', [
             'controller_name' => 'SortieController',
@@ -83,47 +106,47 @@ class SortieController extends AbstractController
             'user' => $user,
         ]);
     }
-  
+
     #[Route('/sortie/create', name: 'app_sortie_create')]
-        public function create(Request $request, ParticipantRepository $participantRepository, EtatRepository $etatRepository, EntityManagerInterface $entityManager): Response
-        {
-            $participant = $participantRepository->find(1);
+    public function create(Request $request, ParticipantRepository $participantRepository, EtatRepository $etatRepository, EntityManagerInterface $entityManager): Response
+    {
+        $participant = $participantRepository->find(1);
 
-            if ($participant == null) {
-                return $this->redirectToRoute('app_main');
-            }
-
-            $sortie = new Sortie();
-
-            $siteForm = $this->createForm(SiteType::class, $participant->getSite());
-
-            $sortie->setOrganisateur($participant);
-            $sortieForm = $this->createForm(AjoutSortieType::class, $sortie);
-            $sortieForm->handleRequest($request);
-
-
-            if ($sortieForm->isSubmitted()) {
-                if ($sortieForm->isValid()) {
-                    $etatValue = $sortieForm->getClickedButton()->getName() === 'publier' ? 'Ouvert' : 'En création';
-
-                    $etat = $etatRepository->getOrMakeEtat($etatValue, $entityManager);
-                    $sortie->setEtat($etat);
-                    $entityManager->persist($sortie->getLieu());
-                    $entityManager->persist($sortie);
-                    $entityManager->flush();
-
-                    $this->addFlash("success", "Votre sortie à bien été enregistrée");
-
-                    return $this->redirectToRoute('app_sortie');
-                } else {
-                    $this->addFlash("error", "Merci de remplir correctement tous les champs");
-                }
-            }
-
-            return $this->render('sortie/create.html.twig', [
-                'controller_name' => 'SortieController',
-                'sortie_form' => $sortieForm,
-                'site_form' => $siteForm
-            ]);
+        if ($participant == null) {
+            return $this->redirectToRoute('app_main');
         }
+
+        $sortie = new Sortie();
+
+        $siteForm = $this->createForm(SiteType::class, $participant->getSite());
+
+        $sortie->setOrganisateur($participant);
+        $sortieForm = $this->createForm(AjoutSortieType::class, $sortie);
+        $sortieForm->handleRequest($request);
+
+
+        if ($sortieForm->isSubmitted()) {
+            if ($sortieForm->isValid()) {
+                $etatValue = $sortieForm->getClickedButton()->getName() === 'publier' ? 'Ouvert' : 'En création';
+
+                $etat = $etatRepository->getOrMakeEtat($etatValue, $entityManager);
+                $sortie->setEtat($etat);
+                $entityManager->persist($sortie->getLieu());
+                $entityManager->persist($sortie);
+                $entityManager->flush();
+
+                $this->addFlash("success", "Votre sortie à bien été enregistrée");
+
+                return $this->redirectToRoute('app_sortie');
+            } else {
+                $this->addFlash("error", "Merci de remplir correctement tous les champs");
+            }
+        }
+
+        return $this->render('sortie/create.html.twig', [
+            'controller_name' => 'SortieController',
+            'sortie_form' => $sortieForm,
+            'site_form' => $siteForm
+        ]);
+    }
 }
