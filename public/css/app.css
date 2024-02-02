@@ -1,6 +1,57 @@
+.Layout-row-end-center{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.Layout-row-start-center{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.Layout-column-start-start{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.Layout-row-space-around-center{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.flex{
+    display:flex;
+    gap:2em;
+}
+
+.txt-center{
+    text-align: center;
+}
+.txt-start{
+    text-align: start !important;
+}
+
+.Title{
+    font-size: 20px;
+    font-weight: bold;
+}
+
 .serie-form-container{
     margin: 1em auto;
     max-width: 800px;
     width: 95%;
     font: 18px/1.5 sans-serif;
+}
+
+table{
+    overflow: auto!important;
+    width: fit-content!important;
+    display: block!important;
+}
+
+.row {
+ margin-left: 0!important;
 }

@@ -1,0 +1,165 @@
+{% extends 'base.html.twig' %}
+{% set showExtendedNavbar = true %}
+
+{% block body %}
+
+    <div class="container px-4 py-1" id="featured-3">
+        <form action="{{ path('app_sortie') }}" method="get" class="flex row">
+            <div class="row g-4 py-1 row-cols-1 row-cols-lg-3">
+
+                <div class="feature col">
+                    <div class="flex">
+                        <div class="Layout-column-start-start" style="gap:3px!important;">
+                            <div class="flex col" style="padding-left: 0!important;">
+                                <p>Site</p>
+                                <select name="site" class="form-control">
+                                    <option value="All">All</option>
+                                    {% for site in sites %}
+                                        <option value="{{ site.nom }}">{{ site.nom }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="Layout-row-start-center">
+                                <div>Recherche</div>
+                                <label>
+                                    <input type="text" name="motclef" class="form-control"/>
+                                </label>
+                            </div>
+                            <div class="Layout-row-start-center flex row" style="gap:2px!important;">
+                                <div class="flex column m-0">
+                                    <p>Debut</p>
+                                    <input type="date" name="dateDebut" class="form-control"/>
+                                </div>
+                                <div class="flex column m-0">
+                                    <p>Fin</p>
+                                    <input type="date" name="dateFin" class="form-control m-0 p-0"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="feature col flex row mt-3">
+                <div class="Layout-column-start-start">
+                    <div class="Layout-row-start-center">
+                        <input type="checkbox" name="cb1"/>
+                        <div>Sorties dont je suis l'organisateur</div>
+                    </div>
+                    <div class="Layout-row-start-center">
+                        <input type="checkbox" name="cb2"/>
+                        <div>Sorties auxquelles je suis inscrit</div>
+                    </div>
+                    <div class="Layout-row-start-center">
+                        <input type="checkbox" name="cb3"/>
+                        <div>Sorties auxquelles je ne suis pas inscrit</div>
+                    </div>
+                    <div class="Layout-row-start-center">
+                        <input type="checkbox" name="cb4"/>
+                        <div>Sorties passées</div>
+                    </div>
+                </div>
+                <input class="Big-Btn form-control" type="submit" value="Rechercher">
+            </div>
+
+            <div class="feature col">
+                <div class="Layout-row-end-center">
+                    <div class="Title">
+                        <div>Date du jour : {{ today|date('d/m/Y') }}</div>
+                        <div>Participant : {{ user.prenom }} {{ user.nom }}</div>
+                    </div>
+                </div>
+            </div>
+    </div>
+    </form>
+    </div>
+
+
+
+
+    <div style=" max-height: 400px;">
+        <table class="table table-striped mx-auto shadow-lg mb-5 bg-white rounded table-bordered"
+               style="max-height: 500px">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">Nom de la sortie</th>
+                <th scope="col">Date de la sortie</th>
+                <th scope="col">Clôture</th>
+                <th scope="col">Inscrits/Places</th>
+                <th scope="col">Etat</th>
+                <th scope="col">Inscrit</th>
+                <th scope="col">Organisateur</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for sortie in sorties %}
+                <tr>
+                    <td>{{ sortie.nom }}</td>
+                    <td>{{ sortie.datedebut|date('Y-m-d') }}</td>
+                    <td>{{ sortie.datecloture|date('Y-m-d') }}</td>
+                    <td>{{ sortie.getInscriptions().count() }}/{{ sortie.inscriptionsmax }}</td>
+                    <td>{{ sortie.getEtat().libelle }}</td>
+                    <td>
+                        {% for inscription in sortie.getInscriptions() %}
+                            {% if inscription.getParticipant().getId() ==  user.id %}
+                                X
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td><a href={{ path('app_participant_id', {'id': sortie.getOrganisateur().id })}}>{{ sortie.getOrganisateur().pseudo }}</a></td>
+                    <td class="txt-start">
+                        {% if sortie.getEtat().libelle != 'En création' %}
+                            <input type="button" value="Afficher" class="form-control">
+                        {% endif %}
+
+                        {% if user.id == sortie.getOrganisateur().id and sortie.getEtat().libelle == 'Ouvert' %}
+                            - <input type="button" value="Annuler" class="form-control">
+                        {% endif %}
+
+                        {% set isUserRegistered = false %}
+
+                        {% for inscription in sortie.getInscriptions() %}
+                            {% if inscription.getParticipant().getId() == user.id %}
+                                {% set isUserRegistered = true %}
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if isUserRegistered and sortie.getEtat().libelle == 'Ouvert' %}
+                            - <form action="{{ path('app_sortie') }}" method="post" >
+                            <input type="hidden" name="desisterid" value="{{ sortie.id }}">
+                            <button type="submit" class="form-control">Se désister</button>
+                        </form>
+                        {% endif %}
+
+                        {% set isUserRegistered = false %}
+
+                        {% for inscription in sortie.getInscriptions() %}
+                            {% if inscription.getParticipant().getId() == user.id %}
+                                {% set isUserRegistered = true %}
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if (not isUserRegistered) and sortie.getEtat().libelle == 'Ouvert' and sortie.datecloture|date('U') > today|date('U') and sortie.getInscriptions().count() < sortie.inscriptionsmax %}
+                            - <form action="{{ path('app_sortie') }}" method="post" >
+                                <input type="hidden" name="sinscrireid" value="{{ sortie.id }}">
+                                <button type="submit" class="form-control">S'inscrire</button>
+                            </form>
+                        {% endif %}
+
+                        {% if user.id == sortie.getOrganisateur().id and sortie.getEtat().libelle == 'En création' %}
+                            <input type="button" value="Modifier"> - <input type="button" value="Publier">
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div style="text-align: center;">
+            <a href="{{ path('app_sortie_create') }}" class="btn btn-primary active " aria-current="page">Créer une
+                sortie</a>
+        </div>
+    </div>
+{% endblock %}
