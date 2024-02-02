@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% set showNavbar = true %}
+
+{% block javascripts %}
+    <!-- Script JavaScript pour gérer l'événement de clic sur le bouton -->
+        <script>
+            // JavaScript pour afficher le formulaire de modification du mot de passe dans une nouvelle page
+            function openPasswordChangeForm() {
+                window.open("{{ path('modifier_mon_mot_de_passe') }}", "_blank");
+            }
+        </script>
+
+{% endblock %}
+
+{% block title %}Mon profil{% endblock %}
+
+{% block body %}
+    <h1>Mon profil</h1>
+
+    {{ form_start(profilForm) }}
+    {{ form_row(profilForm.pseudo) }}
+    {{ form_row(profilForm.prenom) }}
+    {{ form_row(profilForm.nom) }}
+    {{ form_row(profilForm.telephone) }}
+    {{ form_row(profilForm.mail) }}
+    <button id="btnModifierMotDePasse" onclick="openPasswordChangeForm()">Modifier le mot de passe</button>
+    {{ form_row(profilForm.site) }}
+    {{ form_row(profilForm.maphoto) }}
+    <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+    <a type="submit" href="{{ path('accueil') }}">Annuler</a>
+    {{ form_end(profilForm) }}
+
+    {% if error_message is defined %}
+        <script>
+            var errorMessage = '{{ error_message }}';
+            // Vérifier si le message d'erreur est défini et non vide
+            if (errorMessage && errorMessage !== '') {
+                // Afficher une alerte pop-up avec le message d'erreur
+                alert(errorMessage);
+            }
+        </script>
+    {% endif %}
+
+{% endblock %}
