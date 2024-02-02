@@ -22,6 +22,37 @@
     justify-content: space-around;
 }
 
+.Layout-column-center{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.mw-50{
+    max-width: 50%;
+}
+
+.g-5{
+    gap: 5em;
+}
+.g-2{
+    gap: 2em;
+}
+
+.w-30{
+    width: 30em;
+}
+
+.formAnnulation{
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.w-8{
+    width: 8em;
+}
+
 .flex{
     display:flex;
     gap:2em;

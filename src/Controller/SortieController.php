@@ -80,7 +80,7 @@ class SortieController extends AbstractController
 
             $todayDate = $today->format('Y-m-d');
             $sortieDate = $sortie->getDatedebut()->format('Y-m-d');
-            if ($sortie->getEtat()->getLibelle() != 'En création') {
+            if ($sortie->getEtat()->getLibelle() != 'En création' and $sortie->getEtat()->getLibelle() !='Annuler' ) {
 
                 // Comparer les dates
                 if ($todayDate > $sortieDate) {
@@ -148,5 +148,29 @@ class SortieController extends AbstractController
             'sortie_form' => $sortieForm,
             'site_form' => $siteForm
         ]);
+    }
+
+    #[Route('/sortie/annulation/{id}', name: 'app_sortie_annulation')]
+    public function annulation(int $id, Request $request, EntityManagerInterface $entityManager, SortieRepository $sortieRepository, EtatRepository $etatRepository): Response
+    {
+        $sortie = $sortieRepository->find($id);
+
+        if ($request->isMethod('POST'))
+        {
+            $motif = $request->request->get('motif');
+            $sortie->setMotifAnnulation($motif);
+            $etat = $etatRepository->getOrMakeEtat('Annuler', $entityManager); // Annuler
+            $sortie->setEtat($etatRepository->find($etat));
+            $entityManager->persist($sortie);
+            $entityManager->flush();
+            return $this->redirectToRoute('app_sortie');
+        }
+
+        return $this->render('sortie/annulation.html.twig', [
+            'controller_name' => 'SortieController',
+            'sortie' => $sortie,
+            'id' => $id,
+        ]);
+
     }
 }
