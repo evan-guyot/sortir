@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Participant;
 use App\Form\RegisterType;
+use App\Repository\ParticipantRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,7 +37,7 @@ class SecurityController extends AbstractController
     }
 
     #[Route(path: '/register', name: 'app_register')]
-    public function register(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher): Response
+    public function register(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher, ParticipantRepository $participantRepository): Response
     {
         $user = new Participant();
 
@@ -47,6 +48,25 @@ class SecurityController extends AbstractController
 
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            if($participantRepository->hasSamePseudo($user->getPseudo()) ){
+
+                $this->addFlash("error", "Ce pseudo est déjà utilisé");
+
+
+                return $this->render('security/register.html.twig', [
+                    'form' => $form
+                ]);
+            }
+
+            if($participantRepository->hasSameMail($user->getMail()) ){
+
+                $this->addFlash("error", "Cette adresse mail est déjà utilisée");
+
+                return $this->render('security/register.html.twig', [
+                    'form' => $form
+                ]);
+            }
 
             $user->setRoles(["ROLE_USER"]);
             $user->setMotdepasse(
