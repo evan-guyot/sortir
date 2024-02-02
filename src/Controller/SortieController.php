@@ -23,7 +23,11 @@ class SortieController extends AbstractController
     #[Route('', name: 'app_sortie')]
     public function index(Request $request, EntityManagerInterface $entityManager, SiteRepository $siteRepository, SortieRepository $sortieRepository, ParticipantRepository $participantRepository, InscriptionRepository $inscriptionRepository, EtatRepository $etatRepository): Response
     {
-        $user = $participantRepository->find(5);
+        if($this->getUser() == null ){
+            return $this->redirectToRoute("app_login");
+        }
+
+        $user = $participantRepository->find($this->getUser());
         $today = new \DateTime();;
         $sites = $siteRepository->findAll();
 
@@ -110,17 +114,17 @@ class SortieController extends AbstractController
     #[Route('/sortie/create', name: 'app_sortie_create')]
     public function create(Request $request, ParticipantRepository $participantRepository, EtatRepository $etatRepository, EntityManagerInterface $entityManager): Response
     {
-        $participant = $participantRepository->find(1);
+        $user = $participantRepository->find($this->getUser());
 
-        if ($participant == null) {
+        if ($user == null) {
             return $this->redirectToRoute('app_main');
         }
 
         $sortie = new Sortie();
 
-        $siteForm = $this->createForm(SiteType::class, $participant->getSite());
+        $siteForm = $this->createForm(SiteType::class, $user->getSite());
 
-        $sortie->setOrganisateur($participant);
+        $sortie->setOrganisateur($user);
         $sortieForm = $this->createForm(AjoutSortieType::class, $sortie);
         $sortieForm->handleRequest($request);
 

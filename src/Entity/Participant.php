@@ -38,10 +38,10 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 15, nullable: true)]
     private ?string $telephone = null;
 
-    #[ORM\Column(length: 20)]
+    #[ORM\Column(length: 127, unique:true)]
     private ?string $mail = null;
 
-    #[ORM\Column(length: 20)]
+    #[ORM\Column(length: 255)]
     private ?string $motdepasse = null;
 
     #[ORM\Column]
@@ -279,6 +279,6 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getPassword(): ?string
     {
-        return $this->motdepasse;
+        return $this->getMotdepasse();
     }
 }
