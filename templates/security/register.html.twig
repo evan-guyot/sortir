@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+{% set showNavbar = true %}
+
+{% block title %}Register!{% endblock %}
+
+{% block body %}
+        <div class="container px-4 py-1" id="featured-3">
+            {{ form_start(form) }}
+                <div class="mb-3">
+                        {{ form_row(form.pseudo) }}
+                </div>
+                <div class="mb-3">
+                        {{ form_row(form.nom) }}
+                </div>
+                <div class="mb-3">
+                        {{ form_row(form.prenom) }}
+                </div>
+                <div class="mb-3">
+                        {{ form_row(form.telephone) }}
+                </div>
+                <div class="mb-3">
+                        {{ form_row(form.mail) }}
+                </div>
+                <div class="mb-3">
+                        {{ form_row(form.motdepasse) }}
+                </div>
+                <div class="mb-3">
+                        {{ form_row(form.actif) }}
+                </div>
+                <div class="mb-3">
+                        {{ form_row(form.administrateur) }}
+                </div>
+                <div class="mb-3">
+                        {{ form_row(form.site) }}
+                </div>
+
+            {{ form_end(form) }}
+        </div>
+{% endblock %}
