@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% set showNavbar = true %}
+
+{% block title %}Modification de mon mot de passe{% endblock %}
+
+{% block body %}
+
+    <h2>Modifier mon mot de passe</h2>
+
+    {{ form_start(mdpForm) }}
+    {{ form_row(mdpForm.motdepasse.first) }}
+    {{ form_row(mdpForm.motdepasse.second) }}
+    <button type="submit" class="btn btn-primary">Valider</button>
+    <a type="submit" href="{{ path('gestion_mon_profil') }}">Annuler</a>
+    {{ form_end(mdpForm) }}
+
+    {% if error_message is defined %}
+        <script>
+            // Récupérer le message d'erreur s'il est défini
+            var errorMessage = '{{ error_message }}';
+
+            // Vérifier si le message d'erreur est défini et non vide
+            if (errorMessage && errorMessage !== '') {
+                // Afficher une alerte pop-up avec le message d'erreur
+                alert(errorMessage);
+            }
+        </script>
+    {% endif %}
+
+{% endblock %}
