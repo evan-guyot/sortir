@@ -6,8 +6,6 @@ use App\Entity\Participant;
 use App\Entity\Sortie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use phpDocumentor\Reflection\Types\Boolean;
-use PhpParser\Node\Expr\Cast\Bool_;
 
 /**
  * @extends ServiceEntityRepository<Sortie>
@@ -29,8 +27,6 @@ class SortieRepository extends ServiceEntityRepository
      */
     public function findWithFilters(Participant $user, bool $cb1, bool $cb2, bool $cb3, bool $cb4, string $site, string $motclef, $datedebut, $datefin): array
     {
-        dump($site);
-
         $today = new \DateTime();
         $datearchivage = $today->sub(new \DateInterval('P1M'));
 

@@ -21,6 +21,24 @@ class ParticipantRepository extends ServiceEntityRepository
         parent::__construct($registry, Participant::class);
     }
 
+    public function hasSamePseudo(string $pseudo)
+    {
+        return $this->createQueryBuilder('p')
+                ->andWhere('p.pseudo = :pseudo')
+                ->setParameter('pseudo', $pseudo)
+                ->getQuery()
+                ->getOneOrNullResult() != null;
+    }
+
+    public function hasSameMail(string $mail)
+    {
+        return $this->createQueryBuilder('p')
+                ->andWhere('p.mail = :mail')
+                ->setParameter('mail', $mail)
+                ->getQuery()
+                ->getOneOrNullResult() != null;
+    }
+
 //    /**
 //     * @return Participant[] Returns an array of Participant objects
 //     */

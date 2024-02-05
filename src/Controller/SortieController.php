@@ -23,7 +23,11 @@ class SortieController extends AbstractController
     #[Route('', name: 'app_sortie')]
     public function index(Request $request, EntityManagerInterface $entityManager, SiteRepository $siteRepository, SortieRepository $sortieRepository, ParticipantRepository $participantRepository, InscriptionRepository $inscriptionRepository, EtatRepository $etatRepository): Response
     {
-        $user = $participantRepository->find(5);
+        if($this->getUser() == null ){
+            return $this->redirectToRoute("app_login");
+        }
+
+        $user = $participantRepository->find($this->getUser());
         $today = new \DateTime();;
         $sites = $siteRepository->findAll();
 
@@ -47,12 +51,10 @@ class SortieController extends AbstractController
                     'participant' => $user->getId(),
                 ]);
 
-                if (!$inscription) {
-                    throw new NotFoundHttpException('Inscription non trouvée.');
+                if ($inscription) {
+                    $entityManager->remove($inscription);
+                    $entityManager->flush();
                 }
-
-                $entityManager->remove($inscription);
-                $entityManager->flush();
 
             }
 
@@ -80,7 +82,7 @@ class SortieController extends AbstractController
 
             $todayDate = $today->format('Y-m-d');
             $sortieDate = $sortie->getDatedebut()->format('Y-m-d');
-            if ($sortie->getEtat()->getLibelle() != 'En création') {
+            if ($sortie->getEtat()->getLibelle() != 'En création' and $sortie->getEtat()->getLibelle() !='Annuler' ) {
 
                 // Comparer les dates
                 if ($todayDate > $sortieDate) {
@@ -110,17 +112,17 @@ class SortieController extends AbstractController
     #[Route('/sortie/create', name: 'app_sortie_create')]
     public function create(Request $request, ParticipantRepository $participantRepository, EtatRepository $etatRepository, EntityManagerInterface $entityManager): Response
     {
-        $participant = $participantRepository->find(1);
+        $user = $participantRepository->find($this->getUser());
 
-        if ($participant == null) {
+        if ($user == null) {
             return $this->redirectToRoute('app_main');
         }
 
         $sortie = new Sortie();
 
-        $siteForm = $this->createForm(SiteType::class, $participant->getSite());
+        $siteForm = $this->createForm(SiteType::class, $user->getSite());
 
-        $sortie->setOrganisateur($participant);
+        $sortie->setOrganisateur($user);
         $sortieForm = $this->createForm(AjoutSortieType::class, $sortie);
         $sortieForm->handleRequest($request);
 
@@ -148,5 +150,29 @@ class SortieController extends AbstractController
             'sortie_form' => $sortieForm,
             'site_form' => $siteForm
         ]);
+    }
+
+    #[Route('/sortie/annulation/{id}', name: 'app_sortie_annulation')]
+    public function annulation(int $id, Request $request, EntityManagerInterface $entityManager, SortieRepository $sortieRepository, EtatRepository $etatRepository): Response
+    {
+        $sortie = $sortieRepository->find($id);
+
+        if ($request->isMethod('POST'))
+        {
+            $motif = $request->request->get('motif');
+            $sortie->setMotifAnnulation($motif);
+            $etat = $etatRepository->getOrMakeEtat('Annuler', $entityManager); // Annuler
+            $sortie->setEtat($etatRepository->find($etat));
+            $entityManager->persist($sortie);
+            $entityManager->flush();
+            return $this->redirectToRoute('app_sortie');
+        }
+
+        return $this->render('sortie/annulation.html.twig', [
+            'controller_name' => 'SortieController',
+            'sortie' => $sortie,
+            'id' => $id,
+        ]);
+
     }
 }

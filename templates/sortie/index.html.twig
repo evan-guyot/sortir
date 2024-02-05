@@ -70,14 +70,15 @@
                     </div>
                 </div>
             </div>
+        </form>
     </div>
-    </form>
-    </div>
 
 
 
 
-    <div style=" max-height: 400px;">
+
+
+    <div style=" max-height: 400px; ">
         <table class="table table-striped mx-auto shadow-lg mb-5 bg-white rounded table-bordered"
                style="max-height: 500px">
             <thead class="thead-dark">
@@ -100,21 +101,24 @@
                     <td>{{ sortie.datecloture|date('Y-m-d') }}</td>
                     <td>{{ sortie.getInscriptions().count() }}/{{ sortie.inscriptionsmax }}</td>
                     <td>{{ sortie.getEtat().libelle }}</td>
-                    <td>
+                    <td class="text-center">
                         {% for inscription in sortie.getInscriptions() %}
                             {% if inscription.getParticipant().getId() ==  user.id %}
                                 X
                             {% endif %}
                         {% endfor %}
                     </td>
-                    <td><a href={{ path('app_participant_id', {'id': sortie.getOrganisateur().id })}}>{{ sortie.getOrganisateur().pseudo }}</a></td>
-                    <td class="txt-start">
+                    <td>
+                        <a href={{ path('app_participant_id', {'id': sortie.getOrganisateur().id }) }}>{{ sortie.getOrganisateur().pseudo }}</a>
+                    </td>
+                    <td class="txt-start Layout-row-start-center">
                         {% if sortie.getEtat().libelle != 'En création' %}
-                            <input type="button" value="Afficher" class="form-control">
+                            <input type="button" value="Afficher" class="form-control w-8">
                         {% endif %}
 
                         {% if user.id == sortie.getOrganisateur().id and sortie.getEtat().libelle == 'Ouvert' %}
-                            - <input type="button" value="Annuler" class="form-control">
+                            -
+                            <a href="{{ path('app_sortie_annulation', {'id': sortie.id}) }}" class="form-control btn btn-outline-danger w-8" aria-current="page">Annulation</a>
                         {% endif %}
 
                         {% set isUserRegistered = false %}
@@ -126,10 +130,11 @@
                         {% endfor %}
 
                         {% if isUserRegistered and sortie.getEtat().libelle == 'Ouvert' %}
-                            - <form action="{{ path('app_sortie') }}" method="post" >
-                            <input type="hidden" name="desisterid" value="{{ sortie.id }}">
-                            <button type="submit" class="form-control">Se désister</button>
-                        </form>
+                            -
+                            <form action="{{ path('app_sortie') }}" method="post">
+                                <input type="hidden" name="desisterid" value="{{ sortie.id }}">
+                                <button type="submit" class="form-control w-8">Se désister</button>
+                            </form>
                         {% endif %}
 
                         {% set isUserRegistered = false %}
@@ -141,14 +146,15 @@
                         {% endfor %}
 
                         {% if (not isUserRegistered) and sortie.getEtat().libelle == 'Ouvert' and sortie.datecloture|date('U') > today|date('U') and sortie.getInscriptions().count() < sortie.inscriptionsmax %}
-                            - <form action="{{ path('app_sortie') }}" method="post" >
+                            -
+                            <form action="{{ path('app_sortie') }}" method="post">
                                 <input type="hidden" name="sinscrireid" value="{{ sortie.id }}">
-                                <button type="submit" class="form-control">S'inscrire</button>
+                                <button type="submit" class="form-control w-8">S'inscrire</button>
                             </form>
                         {% endif %}
 
                         {% if user.id == sortie.getOrganisateur().id and sortie.getEtat().libelle == 'En création' %}
-                            <input type="button" value="Modifier"> - <input type="button" value="Publier">
+                            <input type="button" value="Modifier" class="form-control w-8"> - <input type="button" value="Publier" class="form-control w-8">
                         {% endif %}
 
                     </td>
