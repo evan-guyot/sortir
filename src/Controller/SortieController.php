@@ -51,12 +51,10 @@ class SortieController extends AbstractController
                     'participant' => $user->getId(),
                 ]);
 
-                if (!$inscription) {
-                    throw new NotFoundHttpException('Inscription non trouvée.');
+                if ($inscription) {
+                    $entityManager->remove($inscription);
+                    $entityManager->flush();
                 }
-
-                $entityManager->remove($inscription);
-                $entityManager->flush();
 
             }
 
