@@ -60,6 +60,9 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'participant', targetEntity: Inscription::class)]
     private Collection $inscriptions;
 
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?Image $image = null;
+
     public function __construct()
     {
         $this->sortiesOrganisees = new ArrayCollection();
@@ -279,6 +282,18 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getPassword(): ?string
     {
-        return $this->motdepasse;
+        return $this->getMotdepasse();
+    }
+
+    public function getImage(): ?Image
+    {
+        return $this->image;
+    }
+
+    public function setImage(?Image $image): static
+    {
+        $this->image = $image;
+
+        return $this;
     }
 }
