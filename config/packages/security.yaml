@@ -39,6 +39,7 @@ security:
         - { path: ^/participant, roles: ROLE_USER }
         - { path: ^/logout, roles: ROLE_USER }
         - { path: ^/login, role: PUBLIC_ACCESS }
+        - { path: ^/monprofil, role: ROLE_USER }
 #        - { path: ^/register, roles: ROLE_ADMIN }
 
 when@test:

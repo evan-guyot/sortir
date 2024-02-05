@@ -4,12 +4,20 @@
 
 {% block javascripts %}
     <!-- Script JavaScript pour gérer l'événement de clic sur le bouton -->
-        <script>
-            // JavaScript pour afficher le formulaire de modification du mot de passe dans une nouvelle page
-            function openPasswordChangeForm() {
-                window.open("{{ path('modifier_mon_mot_de_passe') }}", "_blank");
+    <script>
+        // JavaScript pour afficher le formulaire de modification du mot de passe dans une nouvelle page
+        function openPasswordChangeForm() {
+            window.open("{{ path('modifier_mon_mot_de_passe') }}", "_blank");
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var errorMessage = '{{ error_message | default('') | raw }}';
+            if (errorMessage) {
+                alert(errorMessage);
+                window.history.back();
             }
-        </script>
+        });
+    </script>
 
 {% endblock %}
 
@@ -28,18 +36,7 @@
     {{ form_row(profilForm.site) }}
     {{ form_row(profilForm.maphoto) }}
     <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
-    <a type="submit" href="{{ path('accueil') }}">Annuler</a>
+    <a type="submit" href="{{ path('app_sortie') }}">Annuler</a>
     {{ form_end(profilForm) }}
-
-    {% if error_message is defined %}
-        <script>
-            var errorMessage = '{{ error_message }}';
-            // Vérifier si le message d'erreur est défini et non vide
-            if (errorMessage && errorMessage !== '') {
-                // Afficher une alerte pop-up avec le message d'erreur
-                alert(errorMessage);
-            }
-        </script>
-    {% endif %}
-
 {% endblock %}
+

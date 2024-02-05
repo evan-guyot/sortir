@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Image;
 use App\Entity\Participant;
+use App\Repository\ParticipantRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,16 +21,17 @@ class GestionMonProfilController extends AbstractController
     }
 
     #[Route('/monprofil', name: 'gestion_mon_profil')]
-    public function gestionProfil(Request $request, EntityManagerInterface $entityManager)
+    public function gestionProfil(Request $request, EntityManagerInterface $entityManager, ParticipantRepository $participantRepository)
     {
         // POUR TESTER A ENLEVER
-        //$userId = 3; // ID de l'utilisateur
-        //$participant = $this->entityManager->getRepository(Participant::class)->find($userId);
+//        $userId = 3; // ID de l'utilisateur
+//        $participant = $this->entityManager->getRepository(Participant::class)->find($userId);
 
-        $user = $this->getUser();
+//        $user = $this->getUser();
+//        // Récupère les informations du participant depuis la base de données
+//        $participant = $this->entityManager->getRepository(Participant::class)->find($user->getId());
 
-        // Récupère les informations du participant depuis la base de données
-        $participant = $this->entityManager->getRepository(Participant::class)->find($user->getId());
+        $participant = $participantRepository->find($this->getUser());
 
         $profilForm = $this->createForm(GestionMonProfilType::class, $participant);
 
@@ -41,7 +44,34 @@ class GestionMonProfilController extends AbstractController
 
         if ($profilForm->isSubmitted() && $profilForm->isValid()) {
 
-            // Vérifier si le pseudo a été modifié et si il est déja existant
+            $imageFile = $profilForm->get('maphoto')->getData();
+
+            if ($imageFile) {
+                $imageEntity = new Image();
+
+                $imageName = $imageFile->getClientOriginalName();
+
+                if (strlen($imageName) > 50) {
+                    $errorMessage = "Le nom de l\'image est trop long, 50 caractères maximum. Veuillez la renommer ou en choisir une autre.";
+                    return $this->render('gestion_mon_profil/index.html.twig', [
+                        'profilForm' => $profilForm->createView(),
+                        'site' => $sites,
+                        'error_message' => $errorMessage
+                    ]);
+                }
+
+                $imageBase64 = base64_encode(file_get_contents($imageFile->getPathname()));
+
+                $imageEntity->setNom($imageName);
+                $imageEntity->setContenu($imageBase64);
+
+                // Enregistrez l'entité Image dans la base de données
+                $this->entityManager->persist($imageEntity);
+                $this->entityManager->flush();
+
+                $participant->setImage($imageEntity);
+            }
+                // Vérifier si le pseudo a été modifié et si il est déja existant
             $pseudoActuel = $participant->getPseudo();
             if ($pseudoActuel !== $pseudoInitial) {
                 $existingParticipant = $entityManager->getRepository(Participant::class)->findOneBy(['pseudo' => $pseudoActuel]);
@@ -54,6 +84,7 @@ class GestionMonProfilController extends AbstractController
                     ]);
                 }
             }
+
             $this->entityManager->persist($participant);
             $this->entityManager->flush();// Enregistre les modifications dans la base de données
             return $this->redirectToRoute('gestion_mon_profil');
