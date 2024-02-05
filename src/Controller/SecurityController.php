@@ -69,6 +69,15 @@ class SecurityController extends AbstractController
             }
 
             $user->setRoles(["ROLE_USER"]);
+
+            if($user->isAdministrateur()){
+                $user->setRoles(["ROLE_ADMIN"]);
+            }
+
+            if($user->isActif()){
+                $user->setRoles(["ROLE_ACTIVE"]);
+            }
+
             $user->setMotdepasse(
                 $userPasswordHasher->hashPassword(
                     $user,
