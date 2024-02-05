@@ -7,6 +7,7 @@ use App\Entity\Site;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -49,18 +50,28 @@ class RegisterType extends AbstractType
                     'minMessage' => 'Vote mot de passe doit au moins contenir 6 caractères',
                     'max' => 64,
                 ])]])
-            ->add('administrateur', CheckboxType::class, ['attr' => ['class' => 'form-control'], 'label' => 'Administrateur'])
-            ->add('actif', CheckboxType::class, ['attr' => ['class' => 'form-control'], 'label' => 'Actif'])
+            ->add('administrateur', ChoiceType::class, ['attr' => ['class' => 'form-control'], 'label' => 'Administrateur','choices'  => [
+                'Oui' => true,
+                '是的' => true,
+                'Non' => false,
+                '非' => false,
+            ]])
+            ->add('actif', ChoiceType::class, ['attr' => ['class' => 'form-control'], 'label' => 'Actif','choices'  => [
+                'Oui' => true,
+                '是的' => true,
+                'Non' => false,
+                '非' => false,
+            ]])
             ->add('site', EntityType::class, [
                 'class' => Site::class,
                 'choice_label' => 'nom',
-                'label' => 'Pseudo',
+                'label' => 'Site',
                 'attr' => ['class' => 'form-control'],'constraints' => [
                     new NotBlank([
                         'message' => 'Un site est requis.',
                     ])]
             ])
-            ->add('confirm', SubmitType::class, ['label' => 'Confirmer']);
+            ->add('confirm', SubmitType::class, ['label' => 'Confirmer', 'attr' => ['class' => 'btn btn-primary mb-2']]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

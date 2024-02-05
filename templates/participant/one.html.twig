@@ -24,7 +24,9 @@
             <p>Ville de rattachement : {{ participant.getSite().nom }}</p>
         </div>
     <div class="col-md-7 col-lg-8">
-        <img src="https://picsum.photos/200/300" />
+        {% if participant.getImage() %}
+            <img src="data:image;base64,{{ participant.getImage().getContenu() }}" alt="{{ participant.getImage().getNom() }}">
+        {% endif %}
     </div>
 </div></div>
     {% else %}
