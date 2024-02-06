@@ -13,7 +13,7 @@ class SiteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nom', TextType::class, ['label' => 'Ville organisatrice', 'disabled' => true]);
+            ->add('nom', TextType::class, ['attr' => ['class' => 'form-control'], 'label' => 'Ville organisatrice', 'disabled' => true]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
