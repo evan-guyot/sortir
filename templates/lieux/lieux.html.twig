@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+{% set showExtendedNavbar = true %}
+
+{% block body %}
+    <div class="Layout-column-center g-5">
+
+        <div class="Title txt-center">Ajouter des lieux</div>
+        <form class="mw-50 formAnnulation" action="{{ path('app_lieux') }}" method="post">
+            <div>
+                <div>Choisir une ville</div>
+                <select name="ville" class="form-control">
+                    {% for ville in villes %}
+                        <option value="{{ ville.id }}">{{ ville.nom }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <div>Saisir un nouveau lieux</div>
+                <input class="form-control" type="text" name="lieu">
+            </div>
+            <div>
+                <div>Rue</div>
+                <input class="form-control" type="text" name="rue">
+            </div>
+            <div>
+                <div>Latitude</div>
+                <input class="form-control" type="text" name="latitude">
+            </div>
+            <div>
+                <div>Longitude</div>
+                <input class="form-control" type="text" name="longitude">
+            </div>
+            <div class="Layout-column-center">
+                <input type="submit" value="Ajouter" class="btn btn-primary">
+            </div>
+        </form>
+    </div>
+{% endblock %}
