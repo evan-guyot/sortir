@@ -212,7 +212,7 @@ class SortieController extends AbstractController
                 $entityManager->persist($sortie);
                 $entityManager->flush();
 
-                $this->addFlash("success", "Votre sortie à bien été enregistrée");
+                $this->addFlash("success", "Votre sortie à bien été modifiée");
 
                 return $this->redirectToRoute('app_sortie');
             } else {
