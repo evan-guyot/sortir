@@ -38,6 +38,7 @@ class LieuxController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', "Vous avez bien ajouté : ".$lieu->getNom());
+            return $this->redirectToRoute('app_lieux');
         }
 
         return $this->render('lieux/lieux.html.twig', [
