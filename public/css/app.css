@@ -86,3 +86,8 @@ table{
 .row {
  margin-left: 0!important;
 }
+
+.mx-20{
+    margin-left: 20em!important;
+    margin-right: 20em!important;
+}

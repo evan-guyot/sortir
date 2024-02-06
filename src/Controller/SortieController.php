@@ -24,7 +24,7 @@ class SortieController extends AbstractController
     #[Route('', name: 'app_sortie')]
     public function index(Request $request, EntityManagerInterface $entityManager, SiteRepository $siteRepository, SortieRepository $sortieRepository, ParticipantRepository $participantRepository, InscriptionRepository $inscriptionRepository, EtatRepository $etatRepository): Response
     {
-        if($this->getUser() == null ){
+        if ($this->getUser() == null) {
             return $this->redirectToRoute("app_login");
         }
 
@@ -46,7 +46,7 @@ class SortieController extends AbstractController
             $sortieiddesister = $request->request->get('desisterid');
             $sortieidpublier = $request->request->get('publierid');
 
-            if($sortieidpublier !== null){
+            if ($sortieidpublier !== null) {
                 $sortie = $sortieRepository->find($sortieidpublier);
 
                 if ($sortie) {
@@ -94,7 +94,7 @@ class SortieController extends AbstractController
 
             $todayDate = $today->format('Y-m-d');
             $sortieDate = $sortie->getDatedebut()->format('Y-m-d');
-            if ($sortie->getEtat()->getLibelle() != 'En création' and $sortie->getEtat()->getLibelle() !='Annuler' ) {
+            if ($sortie->getEtat()->getLibelle() != 'En création' and $sortie->getEtat()->getLibelle() != 'Annuler') {
 
                 // Comparer les dates
                 if ($todayDate > $sortieDate) {
@@ -139,17 +139,21 @@ class SortieController extends AbstractController
 
         if ($sortieForm->isSubmitted()) {
             if ($sortieForm->isValid()) {
-                $etatValue = $sortieForm->getClickedButton()->getName() === 'publier' ? 'Ouvert' : 'En création';
+                if ($sortie->getDatecloture() > $sortie->getDatedebut()) {
+                    $this->addFlash("error", "La date de cloture ne peut pas être supérieure à la date de début de sortie");
+                } else {
+                    $etatValue = $sortieForm->getClickedButton()->getName() === 'publier' ? 'Ouvert' : 'En création';
 
-                $etat = $etatRepository->getOrMakeEtat($etatValue, $entityManager);
-                $sortie->setEtat($etat);
-                $entityManager->persist($sortie->getLieu());
-                $entityManager->persist($sortie);
-                $entityManager->flush();
+                    $etat = $etatRepository->getOrMakeEtat($etatValue, $entityManager);
+                    $sortie->setEtat($etat);
+                    $entityManager->persist($sortie->getLieu());
+                    $entityManager->persist($sortie);
+                    $entityManager->flush();
 
-                $this->addFlash("success", "Votre sortie à bien été enregistrée");
+                    $this->addFlash("success", "Votre sortie à bien été enregistrée");
 
-                return $this->redirectToRoute('app_sortie');
+                    return $this->redirectToRoute('app_sortie');
+                }
             } else {
                 $this->addFlash("error", "Merci de remplir correctement tous les champs");
             }
@@ -167,8 +171,7 @@ class SortieController extends AbstractController
     {
         $sortie = $sortieRepository->find($id);
 
-        if ($request->isMethod('POST'))
-        {
+        if ($request->isMethod('POST')) {
             $motif = $request->request->get('motif');
             $sortie->setMotifAnnulation($motif);
             $etat = $etatRepository->getOrMakeEtat('Annuler', $entityManager); // Annuler
@@ -185,8 +188,9 @@ class SortieController extends AbstractController
         ]);
 
     }
+
     #[Route('/sortie/modify/{id}', name: 'app_sortie_modify')]
-    public function modify(int $id, Request $request, ParticipantRepository $participantRepository, SortieRepository $sortieRepository,EtatRepository $etatRepository, EntityManagerInterface $entityManager): Response
+    public function modify(int $id, Request $request, ParticipantRepository $participantRepository, SortieRepository $sortieRepository, EtatRepository $etatRepository, EntityManagerInterface $entityManager): Response
     {
         $user = $participantRepository->find($this->getUser());
 
