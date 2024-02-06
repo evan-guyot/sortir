@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+{% set showNavbar = true %}
+
+{% block title %}Register!{% endblock %}
+
+{% block javascripts %}
+        <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                        var errorMessage = '{{ error_message | default('') | raw }}';
+                        if (errorMessage) {
+                                alert(errorMessage);
+                                window.history.back();
+                        }
+                });
+
+                document.addEventListener('DOMContentLoaded', function() {
+                        var successMessage = '{{ success_message | default('') | raw }}';
+                        if (successMessage) {
+                                alert(successMessage);
+                                window.history.back();
+                        }
+                });
+        </script>
+
+{% endblock %}
+
+{% block body %}
+        <div class="container px-4 py-1" id="featured-3">
+                {{ form_errors(form) }}
+
+            {{ form_start(form) }}
+                <div class="mb-3">
+                        {{ form_row(form.csvFile) }}
+                </div>
+                <div class="mb-3">
+                        {{ form_row(form.save) }}
+                </div>
+            {{ form_end(form) }}
+                <a href="{{ path('app_register') }}" class="btn btn-primary">Retour</a>
+        </div>
+{% endblock %}

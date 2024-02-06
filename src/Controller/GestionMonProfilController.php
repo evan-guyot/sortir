@@ -23,14 +23,6 @@ class GestionMonProfilController extends AbstractController
     #[Route('/monprofil', name: 'gestion_mon_profil')]
     public function gestionProfil(Request $request, EntityManagerInterface $entityManager, ParticipantRepository $participantRepository)
     {
-        // POUR TESTER A ENLEVER
-//        $userId = 3; // ID de l'utilisateur
-//        $participant = $this->entityManager->getRepository(Participant::class)->find($userId);
-
-//        $user = $this->getUser();
-//        // Récupère les informations du participant depuis la base de données
-//        $participant = $this->entityManager->getRepository(Participant::class)->find($user->getId());
-
         $participant = $participantRepository->find($this->getUser());
 
         $profilForm = $this->createForm(GestionMonProfilType::class, $participant);
