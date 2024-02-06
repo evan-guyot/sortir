@@ -52,7 +52,7 @@ class AjoutSortieType extends AbstractType
                 ])
             ]])
             ->add('description', TextareaType::class, ['label' => 'Description & infos'])
-            ->add('urlphoto', FileType::class, ['label' => ' ', 'required' => false])
+            ->add('urlphoto', TextType::class, ['label' => ' ', 'required' => false])
             ->add('lieu', EntityType::class, [
                 "class" => Lieu::class,
                 "choice_label" => "nom"

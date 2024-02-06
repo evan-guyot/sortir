@@ -79,7 +79,7 @@
 
 
     <div style=" max-height: 400px; ">
-        <table class="table table-striped mx-auto shadow-lg mb-5 bg-white rounded table-bordered"
+        <table class="table table-striped mx-auto shadow-lg mb-5 bg-white rounded"
                style="max-height: 500px">
             <thead class="thead-dark">
             <tr>
@@ -111,7 +111,7 @@
                     <td>
                         <a href={{ path('app_participant_id', {'id': sortie.getOrganisateur().id }) }}>{{ sortie.getOrganisateur().pseudo }}</a>
                     </td>
-                    <td class="txt-start Layout-row-start-center">
+                    <td class="disp-cont txt-start Layout-row-start-center">
                         {% if sortie.getEtat().libelle != 'En création' %}
                             <input type="button" value="Afficher" class="form-control w-8">
                         {% endif %}
@@ -154,7 +154,12 @@
                         {% endif %}
 
                         {% if user.id == sortie.getOrganisateur().id and sortie.getEtat().libelle == 'En création' %}
-                            <input type="button" value="Modifier" class="form-control w-8"> - <input type="button" value="Publier" class="form-control w-8">
+                            <a href="{{ path('app_sortie_modify', {'id': sortie.id}) }}" class="form-control btn btn-outline-warning w-8" aria-current="page">Modifier</a>
+                             -
+                            <form action="{{ path('app_sortie') }}" method="post">
+                                <input type="hidden" name="publierid" value="{{ sortie.id }}">
+                                <button type="submit" class="form-control w-8">Publier</button>
+                            </form>
                         {% endif %}
 
                     </td>
