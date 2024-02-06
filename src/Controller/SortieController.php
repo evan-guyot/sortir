@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Inscription;
 use App\Entity\Sortie;
 use App\Form\AjoutSortieType;
+use App\Form\ModifySortieType;
 use App\Form\SiteType;
 use App\Repository\EtatRepository;
 use App\Repository\InscriptionRepository;
@@ -43,6 +44,18 @@ class SortieController extends AbstractController
         if ($request->isMethod('POST')) {
             $sortieidinscription = $request->request->get('sinscrireid');
             $sortieiddesister = $request->request->get('desisterid');
+            $sortieidpublier = $request->request->get('publierid');
+
+            if($sortieidpublier !== null){
+                $sortie = $sortieRepository->find($sortieidpublier);
+
+                if ($sortie) {
+                    $etat = $etatRepository->getOrMakeEtat('Ouvert', $entityManager); // Ouvert
+                    $sortie->setEtat($etat);
+                    $entityManager->flush();
+                }
+            }
+
 
             if ($sortieiddesister !== null) {
 
@@ -57,7 +70,6 @@ class SortieController extends AbstractController
                 }
 
             }
-
 
             if ($sortieidinscription !== null) {
                 $inscription = new Inscription();
@@ -99,7 +111,6 @@ class SortieController extends AbstractController
         }
         $entityManager->flush();
 
-
         return $this->render('sortie/index.html.twig', [
             'controller_name' => 'SortieController',
             'sites' => $sites,
@@ -125,7 +136,6 @@ class SortieController extends AbstractController
         $sortie->setOrganisateur($user);
         $sortieForm = $this->createForm(AjoutSortieType::class, $sortie);
         $sortieForm->handleRequest($request);
-
 
         if ($sortieForm->isSubmitted()) {
             if ($sortieForm->isValid()) {
@@ -175,4 +185,46 @@ class SortieController extends AbstractController
         ]);
 
     }
+    #[Route('/sortie/modify/{id}', name: 'app_sortie_modify')]
+    public function modify(int $id, Request $request, ParticipantRepository $participantRepository, SortieRepository $sortieRepository,EtatRepository $etatRepository, EntityManagerInterface $entityManager): Response
+    {
+        $user = $participantRepository->find($this->getUser());
+
+
+        $sortie = $sortieRepository->find($id);
+        if ($user == null && $user === $sortie->getOrganisateur()) {
+            return $this->redirectToRoute('app_main');
+        }
+
+        $siteForm = $this->createForm(SiteType::class, $user->getSite());
+
+        $sortie->setOrganisateur($user);
+        $sortieForm = $this->createForm(AjoutSortieType::class, $sortie);
+        $sortieForm->handleRequest($request);
+
+        if ($sortieForm->isSubmitted()) {
+            if ($sortieForm->isValid()) {
+                $etatValue = $sortieForm->getClickedButton()->getName() === 'publier' ? 'Ouvert' : 'En création';
+
+                $etat = $etatRepository->getOrMakeEtat($etatValue, $entityManager);
+                $sortie->setEtat($etat);
+                $entityManager->persist($sortie->getLieu());
+                $entityManager->persist($sortie);
+                $entityManager->flush();
+
+                $this->addFlash("success", "Votre sortie à bien été enregistrée");
+
+                return $this->redirectToRoute('app_sortie');
+            } else {
+                $this->addFlash("error", "Merci de remplir correctement tous les champs");
+            }
+        }
+
+        return $this->render('sortie/modify.html.twig', [
+            'controller_name' => 'SortieController',
+            'sortie_form' => $sortieForm,
+            'site_form' => $siteForm
+        ]);
+    }
+
 }
