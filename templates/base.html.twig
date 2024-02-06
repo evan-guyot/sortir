@@ -44,6 +44,16 @@
         </header>
     {% endif %}
     <main>
+
+
+        {% for label, messages in app.flashes %}
+            <div class="alert {{ label == "success" ? "alert-success" : "alert-danger" }}" role="alert">
+            {% for message in messages %}
+                    {{ message }}
+            {% endfor %}
+            </div>
+        {% endfor %}
+
         {% block body %}{% endblock %}
     </main>
     </body>
