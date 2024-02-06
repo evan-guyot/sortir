@@ -4,7 +4,7 @@ namespace App\Tests;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class AccessibilityAccessTest extends WebTestCase
+class AccessibilityTest extends WebTestCase
 {
     public function testRedirectIfNotLogged(): void
     {
