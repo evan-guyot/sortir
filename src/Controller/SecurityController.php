@@ -162,9 +162,9 @@ class SecurityController extends AbstractController
                     $image = $imageRepository->findOneBy(['id' => $imageId]);
 
                     if ($actif) {
-                        $roles[] = 'ROLE_ACTIF';
+                        $roles[] = 'ROLE_ACTIVE';
                     } else {
-                        $roles[] = 'ROLE_INACTIF';
+                        $roles[] = 'ROLE_INACTIVE';
                     }
 
                     if ($administrateur) {
