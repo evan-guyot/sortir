@@ -45,3 +45,9 @@ jobs:
       env:
         DATABASE_URL: sqlite:///%kernel.project_dir%/data/database.sqlite
       run: vendor/bin/phpunit
+    - name: Check Twig Templates
+      run: php bin/console lint:twig src
+    - name: Check YAML Files
+      run: php bin/console lint:yaml templates
+    - name: Check XLIFF Files
+      run: php bin/console lint:xliff translations
