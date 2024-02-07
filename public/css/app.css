@@ -91,3 +91,11 @@ table{
     margin-left: 20em!important;
     margin-right: 20em!important;
 }
+
+.fw-bold{
+    font-weight: bold;
+}
+
+.mt-5{
+    margin-top: 5em!important;
+}
