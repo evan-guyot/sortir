@@ -87,6 +87,7 @@ class GestionMonProfilController extends AbstractController
             'profilForm' => $profilForm->createView(),
             'site' => $sites,
             'error_message' => null,
+            'participant' => $participant
         ]);
     }
 }

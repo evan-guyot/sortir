@@ -19,7 +19,7 @@ class ModifierMonMotDePasseType extends AbstractType
             'type' => PasswordType::class,
             'invalid_message' => "Les mots de passe doivent correspondre.",
             'options' => ['attr' => ['class' => 'password-field']],
-            'first_options'  => ['label' => 'Mot de passe :'],
+            'first_options'  => ['label' => 'Nouveau mot de passe :'],
             'second_options' => ['label' => 'Confirmer le mot de passe :']
             ]);
     }
