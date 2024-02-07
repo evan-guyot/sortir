@@ -39,6 +39,38 @@ class ParticipantRepository extends ServiceEntityRepository
                 ->getOneOrNullResult() != null;
     }
 
+    public function disable(int $id)
+    {
+        $user = $this->find($id);
+        if (!$user) {
+            throw new \Exception("Participant with id $id not found.");
+        }
+        $user->setActif(false);
+        $this->getEntityManager()->persist($user);
+        $this->getEntityManager()->flush();
+    }
+
+    public function enable(int $id)
+    {
+        $user = $this->find($id);
+        if (!$user) {
+            throw new \Exception("Participant with id $id not found.");
+        }
+        $user->setActif(true);
+        $this->getEntityManager()->persist($user);
+        $this->getEntityManager()->flush();
+    }
+
+    public function delete(int $id)
+    {
+        $user = $this->find($id);
+        if (!$user) {
+            throw new \Exception("Participant with id $id not found.");
+        }
+
+        $this->getEntityManager()->remove($user);
+        $this->getEntityManager()->flush();
+    }
 //    /**
 //     * @return Participant[] Returns an array of Participant objects
 //     */
