@@ -42,11 +42,16 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/sortie, roles: ROLE_USER }
-        - { path: ^/participant, roles: ROLE_USER }
         - { path: ^/logout, roles: ROLE_USER }
         - { path: ^/login, role: PUBLIC_ACCESS }
         - { path: ^/monprofil, role: ROLE_USER }
-#        - { path: ^/register, roles: ROLE_ADMIN }
+        - { path: ^/participants/administration, role: ROLE_ADMIN }
+        - { path: ^/participants/disable, role: ROLE_ADMIN }
+        - { path: ^/participants/enable, role: ROLE_ADMIN }
+        - { path: ^/participants/delete, role: ROLE_ADMIN }
+        - { path: ^/participants, roles: ROLE_USER }
+        - { path: ^/register, roles: ROLE_ADMIN }
+        - { path: ^/registerFile, roles: ROLE_ADMIN }
 
 when@test:
     security:

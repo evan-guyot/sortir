@@ -39,6 +39,52 @@ class ParticipantRepository extends ServiceEntityRepository
                 ->getOneOrNullResult() != null;
     }
 
+    public function disable(int $id)
+    {
+        $user = $this->find($id);
+        if (!$user) {
+            throw new \Exception("Participant with id $id not found.");
+        }
+        $newRoles = array('ROLE_INACTIVE');
+        foreach ($user->getRoles() as $role) {
+            if ($role != 'ROLE_ACTIVE') {
+                $newRoles[] = $role;
+            }
+        }
+        $user->setRoles($newRoles);
+        $user->setActif(false);
+        $this->getEntityManager()->persist($user);
+        $this->getEntityManager()->flush();
+    }
+
+    public function enable(int $id)
+    {
+        $user = $this->find($id);
+        if (!$user) {
+            throw new \Exception("Participant with id $id not found.");
+        }
+        $newRoles = array('ROLE_ACTIVE');
+        foreach ($user->getRoles() as $role) {
+            if ($role != 'ROLE_INACTIVE') {
+                $newRoles[] = $role;
+            }
+        }
+        $user->setRoles($newRoles);
+        $user->setActif(true);
+        $this->getEntityManager()->persist($user);
+        $this->getEntityManager()->flush();
+    }
+
+    public function delete(int $id)
+    {
+        $user = $this->find($id);
+        if (!$user) {
+            throw new \Exception("Participant with id $id not found.");
+        }
+
+        $this->getEntityManager()->remove($user);
+        $this->getEntityManager()->flush();
+    }
 //    /**
 //     * @return Participant[] Returns an array of Participant objects
 //     */

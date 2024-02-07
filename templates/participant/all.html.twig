@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Liste des utilisateurs
+{% endblock %}
+
+{% block body %}
+    {% if participants is defined and participants is not null %}
+        <style>
+            table {
+                border-collapse: separate;
+                border-spacing: 15px;
+            }
+        </style>
+        <table>
+            <h4>Utilisateurs actifs :</h4>
+            {% for participant in participants %}
+                {% if participant.isActif() %}
+                    <tr>
+                        <td>{{ participant.getPseudo() }}</td>
+                        <td>
+                            <form action="{{ path('app_participant_disable') }}" method="post">
+                                <input type="hidden" name="userId" value="{{ participant.getId() }}">
+                                <button type="submit">Désactiver</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form id="deleteForm{{ participant.getId() }}" action="{{ path('app_participant_delete') }}" method="post">
+                                <input type="hidden" name="userId" value="{{ participant.getId() }}">
+                                <button type="button" onclick="confirmDelete()">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endif %}
+            {%  endfor %}
+        </table>
+
+        <br>
+
+        <table>
+            <h4>Utilisateurs désactivés :</h4>
+            {% for participant in participants %}
+                {% if not participant.isActif() %}
+                    <tr>
+                        <td>{{ participant.getPseudo() }}</td>
+                        <td>
+                            <form action="{{ path('app_participant_enable') }}" method="post">
+                                <input type="hidden" name="userId" value="{{ participant.getId() }}">
+                                <button type="submit">Activer</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form id="deleteForm{{ participant.getId() }}" action="{{ path('app_participant_delete') }}" method="post">
+                                <input type="hidden" name="userId" value="{{ participant.getId() }}">
+                                <button type="button" onclick="confirmDelete({{ participant.getId() }})">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endif %}
+            {%  endfor %}
+        </table>
+
+        <script>
+            function confirmDelete(id) {
+                if (confirm("Êtes-vous sûr de vouloir supprimer cet élément ?")) {
+                    document.getElementById('deleteForm' + id).submit();
+                }
+            }
+        </script>
+    {% endif %}
+{% endblock %}
