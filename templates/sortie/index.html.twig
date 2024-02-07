@@ -116,7 +116,7 @@
                             <input type="button" value="Afficher" class="form-control w-8">
                         {% endif %}
 
-                        {% if user.id == sortie.getOrganisateur().id and sortie.getEtat().libelle == 'Ouvert' %}
+                        {% if (user.id == sortie.getOrganisateur().id and sortie.getEtat().libelle == 'Ouvert') or (sortie.getEtat().libelle == 'Ouvert' and user.isAdministrateur()) %}
                             -
                             <a href="{{ path('app_sortie_annulation', {'id': sortie.id}) }}" class="form-control btn btn-outline-danger w-8" aria-current="page">Annulation</a>
                         {% endif %}
