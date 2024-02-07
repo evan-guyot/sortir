@@ -81,9 +81,13 @@ class SortieRepository extends ServiceEntityRepository
                 ->setParameter('motclef', '%' . $motclef . '%');
         }
 
-        if ($datedebut and $datefin) {
-            $qb->andWhere('s.datedebut BETWEEN :datedebut AND :datefin')
-                ->setParameter('datedebut', $datedebut)
+        if($datedebut){
+            $qb->andWhere('s.datedebut >= :datedebut')
+                ->setParameter('datedebut', $datedebut);
+        }
+        
+        if ($datefin) {
+            $qb->andWhere('s.datedebut <= :datefin')
                 ->setParameter('datefin', $datefin);
         }
 
