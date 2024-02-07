@@ -62,19 +62,14 @@ class SecurityController extends AbstractController
 
                 $this->addFlash("error", "Ce pseudo est déjà utilisé");
 
-
-                return $this->render('security/register.html.twig', [
-                    'form' => $form
-                ]);
+                return $this->redirectToRoute("app_register");
             }
 
             if($participantRepository->hasSameMail($user->getMail()) ){
 
                 $this->addFlash("error", "Cette adresse mail est déjà utilisée");
 
-                return $this->render('security/register.html.twig', [
-                    'form' => $form
-                ]);
+                return $this->redirectToRoute("app_register");
             }
 
             $user->setRoles(["ROLE_USER"]);
@@ -97,9 +92,9 @@ class SecurityController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            $this->addFlash("success", "Vous avez été enregistré");
+            $this->addFlash("success", "Le compte vient d'être créé");
 
-            return $this->redirectToRoute("app_login");
+            return $this->redirectToRoute("app_register");
         }
 
         return $this->render('security/register.html.twig', [
