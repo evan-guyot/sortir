@@ -19,13 +19,13 @@
                     <tr>
                         <td>{{ participant.getPseudo() }}</td>
                         <td>
-                            <form action="{{ path('app_participants_disable') }}" method="post">
+                            <form action="{{ path('app_participant_disable') }}" method="post">
                                 <input type="hidden" name="userId" value="{{ participant.getId() }}">
                                 <button type="submit">Désactiver</button>
                             </form>
                         </td>
                         <td>
-                            <form action="{{ path('app_participants_delete') }}" method="post">
+                            <form id="deleteForm{{ participant.getId() }}" action="{{ path('app_participant_delete') }}" method="post">
                                 <input type="hidden" name="userId" value="{{ participant.getId() }}">
                                 <button type="button" onclick="confirmDelete()">Supprimer</button>
                             </form>
@@ -44,15 +44,15 @@
                     <tr>
                         <td>{{ participant.getPseudo() }}</td>
                         <td>
-                            <form action="{{ path('app_participants_enable') }}" method="post">
+                            <form action="{{ path('app_participant_enable') }}" method="post">
                                 <input type="hidden" name="userId" value="{{ participant.getId() }}">
                                 <button type="submit">Activer</button>
                             </form>
                         </td>
                         <td>
-                            <form action="{{ path('app_participants_delete') }}" method="post">
+                            <form id="deleteForm{{ participant.getId() }}" action="{{ path('app_participant_delete') }}" method="post">
                                 <input type="hidden" name="userId" value="{{ participant.getId() }}">
-                                <button type="button" onclick="confirmDelete()">Supprimer</button>
+                                <button type="button" onclick="confirmDelete({{ participant.getId() }})">Supprimer</button>
                             </form>
                         </td>
                     </tr>
@@ -61,9 +61,9 @@
         </table>
 
         <script>
-            function confirmDelete() {
+            function confirmDelete(id) {
                 if (confirm("Êtes-vous sûr de vouloir supprimer cet élément ?")) {
-                    document.getElementById('deleteForm').submit();
+                    document.getElementById('deleteForm' + id).submit();
                 }
             }
         </script>

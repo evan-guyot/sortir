@@ -8,9 +8,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+#[Route('/participants')]
 class ParticipantController extends AbstractController
 {
-    #[Route('/participants', "app_participants")]
+    #[Route('/administration', "app_participants")]
     public function allParticipants(ParticipantRepository $participantRepository)
     {
         $participants = $participantRepository->findAll();
@@ -20,7 +21,7 @@ class ParticipantController extends AbstractController
         ]);
     }
 
-    #[Route('/participant/disable', "app_participants_disable")]
+    #[Route('/disable', "app_participant_disable")]
     public function disable(Request $request, ParticipantRepository $participantRepository): Response
     {
         $userId = $request->get('userId');
@@ -29,7 +30,7 @@ class ParticipantController extends AbstractController
         return $this->redirectToRoute('app_participants');
     }
 
-    #[Route('/participant/enable', "app_participants_enable")]
+    #[Route('/enable', "app_participant_enable")]
     public function enable(Request $request, ParticipantRepository $participantRepository): Response
     {
         $userId = $request->get('userId');
@@ -38,7 +39,7 @@ class ParticipantController extends AbstractController
         return $this->redirectToRoute('app_participants');
     }
 
-    #[Route('/participant/delete', "app_participants_delete")]
+    #[Route('/delete', "app_participant_delete")]
     public function delete(Request $request, ParticipantRepository $participantRepository): Response
     {
         $userId = $request->get('userId');
@@ -47,7 +48,7 @@ class ParticipantController extends AbstractController
         return $this->redirectToRoute('app_participants');
     }
 
-    #[Route('/participant/{id}', "app_participant_id")]
+    #[Route('/{id}', "app_participant_id")]
     public function participantId(int $id, ParticipantRepository $participantRepository)
     {
         $participant = $participantRepository->find($id);
