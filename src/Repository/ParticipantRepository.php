@@ -45,6 +45,13 @@ class ParticipantRepository extends ServiceEntityRepository
         if (!$user) {
             throw new \Exception("Participant with id $id not found.");
         }
+        $newRoles = array('ROLE_INACTIVE');
+        foreach ($user->getRoles() as $role) {
+            if ($role != 'ROLE_ACTIVE') {
+                $newRoles[] = $role;
+            }
+        }
+        $user->setRoles($newRoles);
         $user->setActif(false);
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
@@ -56,6 +63,13 @@ class ParticipantRepository extends ServiceEntityRepository
         if (!$user) {
             throw new \Exception("Participant with id $id not found.");
         }
+        $newRoles = array('ROLE_ACTIVE');
+        foreach ($user->getRoles() as $role) {
+            if ($role != 'ROLE_INACTIVE') {
+                $newRoles[] = $role;
+            }
+        }
+        $user->setRoles($newRoles);
         $user->setActif(true);
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();

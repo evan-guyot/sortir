@@ -10,16 +10,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ParticipantController extends AbstractController
 {
-    #[Route('/participant/{id}', "app_participant_id")]
-    public function participantId(int $id, ParticipantRepository $participantRepository)
-    {
-        $participant = $participantRepository->find($id);
-
-        return $this->render("participant/one.html.twig", [
-            'participant' => $participant
-        ]);
-    }
-
     #[Route('/participants', "app_participants")]
     public function allParticipants(ParticipantRepository $participantRepository)
     {
@@ -30,7 +20,7 @@ class ParticipantController extends AbstractController
         ]);
     }
 
-    #[Route('/participants/disable', "app_participants_disable")]
+    #[Route('/participant/disable', "app_participants_disable")]
     public function disable(Request $request, ParticipantRepository $participantRepository): Response
     {
         $userId = $request->get('userId');
@@ -39,7 +29,7 @@ class ParticipantController extends AbstractController
         return $this->redirectToRoute('app_participants');
     }
 
-    #[Route('/participants/enable', "app_participants_enable")]
+    #[Route('/participant/enable', "app_participants_enable")]
     public function enable(Request $request, ParticipantRepository $participantRepository): Response
     {
         $userId = $request->get('userId');
@@ -48,12 +38,22 @@ class ParticipantController extends AbstractController
         return $this->redirectToRoute('app_participants');
     }
 
-    #[Route('/participants/delete', "app_participants_delete")]
+    #[Route('/participant/delete', "app_participants_delete")]
     public function delete(Request $request, ParticipantRepository $participantRepository): Response
     {
         $userId = $request->get('userId');
         $participantRepository->delete($userId);
 
         return $this->redirectToRoute('app_participants');
+    }
+
+    #[Route('/participant/{id}', "app_participant_id")]
+    public function participantId(int $id, ParticipantRepository $participantRepository)
+    {
+        $participant = $participantRepository->find($id);
+
+        return $this->render("participant/one.html.twig", [
+            'participant' => $participant
+        ]);
     }
 }
