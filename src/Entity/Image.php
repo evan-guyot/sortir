@@ -16,7 +16,7 @@ class Image
     #[ORM\Column(length: 50)]
     private ?string $nom = null;
 
-    #[ORM\Column(length: 15000)]
+    #[ORM\Column(length: 100000)]
     private ?string $contenu = null;
 
     public function getId(): ?int
