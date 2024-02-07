@@ -87,6 +87,15 @@ table{
  margin-left: 0!important;
 }
 
+.mx-login{
+    margin-left: 3em!important;
+    margin-right: 3em!important;
+}
+
+.mxw{
+    max-width: 40em;
+}
+
 .mx-20{
     margin-left: 20em!important;
     margin-right: 20em!important;
