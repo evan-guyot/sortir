@@ -2,9 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\Participant;
-use App\Form\GestionMonProfilType;
 use App\Form\ModifierMonMotDePasseType;
+use App\Repository\ParticipantRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,20 +21,12 @@ class ModifierMonMotDePasseController extends AbstractController
     }
 
     #[Route('/modificationmotdepasse', name: 'modifier_mon_mot_de_passe')]
-    public function modifierMonMotDePasse(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher)
+    public function modifierMonMotDePasse(Request $request, UserPasswordHasherInterface $passwordHasher, ParticipantRepository $participantRepository)
     {
-        // POUR TESTER A ENLEVER
-        //$userId = 3; // ID de l'utilisateur
-        //$participant = $this->entityManager->getRepository(Participant::class)->find($userId);
+        $participant = $participantRepository->find($this->getUser());
 
-        $user = $this->getUser();
-        // Récupère les informations du participant depuis la base de données
-        $participant = $this->entityManager->getRepository(Participant::class)->find($user->getId());
-
-        // Créer le formulaire de modification du profil avec les données de l'utilisateur
         $mdpForm = $this->createForm(ModifierMonMotDePasseType::class, $participant);
 
-        // Gère la soumission du formulaire
         $mdpForm->handleRequest($request);
 
         if ($mdpForm->isSubmitted() && $mdpForm->isValid()) {

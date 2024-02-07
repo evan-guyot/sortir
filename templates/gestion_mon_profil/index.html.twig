@@ -3,13 +3,7 @@
 {% set showNavbar = true %}
 
 {% block javascripts %}
-    <!-- Script JavaScript pour gérer l'événement de clic sur le bouton -->
     <script>
-        // JavaScript pour afficher le formulaire de modification du mot de passe dans une nouvelle page
-        function openPasswordChangeForm() {
-            window.open("{{ path('modifier_mon_mot_de_passe') }}", "_blank");
-        }
-
         document.addEventListener('DOMContentLoaded', function() {
             var errorMessage = '{{ error_message | default('') | raw }}';
             if (errorMessage) {
@@ -24,19 +18,37 @@
 {% block title %}Mon profil{% endblock %}
 
 {% block body %}
-    <h1>Mon profil</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 offset-mg-3 mt-5">
+                {% if participant.getImage() %}
+                    <img src="data:image;base64,{{ participant.getImage().getContenu() }}" alt="{{ participant.getImage().getNom() }}" style="width: 250px; height: auto;">
+                {% endif %}
+            </div>
+            <div class="col-md-9">
+                <div class="text-center">
+                    <h1>Mon profil</h1>
+                    <br>
+                    {{ form_start(profilForm) }}
+                    {{ form_row(profilForm.pseudo) }}
+                    {{ form_row(profilForm.prenom) }}
+                    {{ form_row(profilForm.nom) }}
+                    {{ form_row(profilForm.telephone) }}
+                    {{ form_row(profilForm.mail) }}
+                    {{ form_row(profilForm.site) }}
+                    {{ form_row(profilForm.maphoto) }}
+                    <br>
+                    <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+                    <a type="submit" href="{{ path('app_sortie') }}">Annuler</a>
+                    <br>
+                    <br>
+                    <a href="{{ path('modifier_mon_mot_de_passe') }}">Modifier mon mot de passe</a>
+                    {{ form_end(profilForm) }}
+                </div>
+            </div>
+        </div>
+    </div>
 
-    {{ form_start(profilForm) }}
-    {{ form_row(profilForm.pseudo) }}
-    {{ form_row(profilForm.prenom) }}
-    {{ form_row(profilForm.nom) }}
-    {{ form_row(profilForm.telephone) }}
-    {{ form_row(profilForm.mail) }}
-    <button id="btnModifierMotDePasse" onclick="openPasswordChangeForm()">Modifier le mot de passe</button>
-    {{ form_row(profilForm.site) }}
-    {{ form_row(profilForm.maphoto) }}
-    <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
-    <a type="submit" href="{{ path('app_sortie') }}">Annuler</a>
-    {{ form_end(profilForm) }}
+
 {% endblock %}
 
