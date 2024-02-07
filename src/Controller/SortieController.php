@@ -165,6 +165,21 @@ class SortieController extends AbstractController
             'site_form' => $siteForm
         ]);
     }
+    #[Route('/sortie/display/{id}', name: 'app_sortie_display_id')]
+    public function display(Request $request, SortieRepository $sortieRepository, EtatRepository $etatRepository, EntityManagerInterface $entityManager, int $id): Response
+    {
+        $sortie = $sortieRepository->find($id);
+
+        if ($sortie == null) {
+            $this->addFlash("error", "La sortie que vous avez essayé de visualiser n'existe pas");
+            return $this->redirectToRoute('app_main');
+        }
+
+
+        return $this->render('sortie/display.html.twig', [
+            'sortie' => $sortie,
+        ]);
+    }
 
     #[Route('/sortie/annulation/{id}', name: 'app_sortie_annulation')]
     public function annulation(int $id, Request $request, EntityManagerInterface $entityManager, SortieRepository $sortieRepository, EtatRepository $etatRepository): Response

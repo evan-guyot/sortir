@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+{% set showNavbar = true %}
+
+{% block title %}
+    {% if sortie is defined and sortie is not null %}{{ sortie.getNom() }}{% endif %}{% endblock %}
+
+{% block body %}
+    {% if sortie is defined and sortie is not null %}
+        <div class="form-group mx-20 my-5">
+        <h1 class="text-center">Afficher une sortie</h1>
+
+        <div class="flex flex-column mt-1">
+            <div class="row">
+                <div class="col">
+                    Nom : <span class="fw-bold">{{ sortie.getNom() }}</span>
+                </div>
+                <div class="col">
+                    Ville organisatrice : <span class="fw-bold">{{ sortie.getOrganisateur().getSite().getNom() }}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    Date & heure de la sortie : <span
+                            class="fw-bold">{{ sortie.getDatedebut()|date("d/m/Y") }} {{ sortie.getDatedebut()|format_datetime('none', 'short', locale='fr') }}</span>
+                </div>
+                <div class="col">
+                    Lieu : <span class="fw-bold">{{ sortie.getLieu().getNom() }}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    Date limite d'inscription : <span class="fw-bold">{{ sortie.getDatecloture()|date("d/m/Y") }}</span>
+                </div>
+                <div class="col">
+                    Rue : <span class="fw-bold">{{ sortie.getLieu().getRue() }}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">Nombre de places : <span class="fw-bold">{{ sortie.getInscriptions().Count() }}</span>
+                </div>
+                <div class="col">Code postal : <span
+                            class="fw-bold">{{ sortie.getLieu().getVille().getCodePostal() }}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">Durée : <span class="fw-bold">{{ sortie.getDuree() }} min</span>
+                </div>
+                <div class="col">Latitude : <span class="fw-bold">{{ sortie.getLieu().getLatitude() }}</span>
+                </div>
+            </div>
+            <div class="row">
+                {% if sortie.getDescription() %}
+                    <div class="col">Description & infos : <span class="fw-bold">{{ sortie.getDescription() }}</span>
+                    </div>
+                {% endif %}
+                <div class="col">Longitude : <span class="fw-bold">{{ sortie.getLieu().getLongitude() }}</span>
+                </div>
+            </div>
+
+            <h3 class="text-center">Inscrits :</h3>
+            <table class="table table-striped table-primary m-auto">
+                <thead>
+                <tr>
+                    <th>Pseudo</th>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Site</th>
+                    <th>Date inscription</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for inscription in sortie.getInscriptions() %}
+                    <tr>
+                        <td>{{ inscription.getParticipant().getPseudo() }}</td>
+                        <td>{{ inscription.getParticipant().getNom() }}</td>
+                        <td>{{ inscription.getParticipant().getPrenom() }}</td>
+                        <td>{{ inscription.getParticipant().getSite().getNom() }}</td>
+                        <td>{{ inscription.getDateInscription() |date("d/m/Y") }} {{ inscription.getDateInscription() |format_datetime('none', 'short', locale='fr') }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+{% endblock %}
