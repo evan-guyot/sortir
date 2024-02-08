@@ -27,7 +27,7 @@
                         <td>
                             <form id="deleteForm{{ participant.getId() }}" action="{{ path('app_participant_delete') }}" method="post">
                                 <input type="hidden" name="userId" value="{{ participant.getId() }}">
-                                <button type="button" onclick="confirmDelete()">Supprimer</button>
+                                <button type="button" onclick="confirmDelete({{ participant.getId() }})">Supprimer</button>
                             </form>
                         </td>
                     </tr>
