@@ -1,3 +1,22 @@
 body {
-    background-color: skyblue;
+    background-color: #A2E4EE;
+    font-family: 'Gill Sans', sans-serif;
+ }
+
+h1 {
+    font-weight: bold;
+}
+
+.paragraph-profil {
+    font-size: 18px;
+    text-align: left;
+}
+
+.encadrement {
+    border: 3px solid #000; /* Bordure de 2 pixels avec une couleur noire */
+    padding: 10px; /* Espacement à l'intérieur du bloc */
+    max-width: 50%; /* Limiter la largeur maximale de l'encadrement */
+    margin: 0 auto; /* Centrer l'encadrement horizontalement */
+    margin-top: 10rem;
+    background-color: lightgrey;
 }

@@ -2,30 +2,19 @@
 
 {% set showNavbar = true %}
 
-{% block javascripts %}
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var errorMessage = '{{ error_message | default('') | raw }}';
-            if (errorMessage) {
-                alert(errorMessage);
-                window.history.back();
-            }
-        });
-    </script>
-
-{% endblock %}
-
 {% block title %}Mon profil{% endblock %}
 
 {% block body %}
     <div class="container">
-        <div class="row">
-            <div class="col-md-3 offset-mg-3 mt-5">
+        <div class="row align-items-center justify-content-center">
+            <div class="col-md-3 offset-md-1 mt-1">
                 {% if participant.getImage() %}
-                    <img src="data:image;base64,{{ participant.getImage().getContenu() }}" alt="{{ participant.getImage().getNom() }}" style="width: 250px; height: auto;">
+                    <div class="border border-dark p-3">
+                        <img src="data:image;base64,{{ participant.getImage().getContenu() }}" alt="{{ participant.getImage().getNom() }}" class="img-fluid rounded">
+                    </div>
                 {% endif %}
             </div>
-            <div class="col-md-9">
+            <div class="col-md-6 offset-md-2 mt-1">
                 <div class="text-center">
                     <h1>Mon profil</h1>
                     <br>
@@ -39,7 +28,7 @@
                     {{ form_row(profilForm.maphoto) }}
                     <br>
                     <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
-                    <a type="submit" href="{{ path('app_sortie') }}">Annuler</a>
+                    <a type="submit" href="{{ path('app_sortie') }}" class="btn btn-primary">Annuler</a>
                     <br>
                     <br>
                     <a href="{{ path('modifier_mon_mot_de_passe') }}">Modifier mon mot de passe</a>
@@ -48,7 +37,17 @@
             </div>
         </div>
     </div>
+{% endblock %}
 
-
+{% block javascripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var errorMessage = '{{ error_message | default('') | raw }}';
+            if (errorMessage) {
+                alert(errorMessage);
+                window.history.back();
+            }
+        });
+    </script>
 {% endblock %}
 
