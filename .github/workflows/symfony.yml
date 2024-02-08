@@ -45,6 +45,9 @@ jobs:
 #      run: |
 #        ls -l $GITHUB_WORKSPACE
 #        ls -l $GITHUB_WORKSPACE/data
+    - name: Load .env file
+      run: source .env
+
     - name: Debug DATABASE_URL
       run: echo $DATABASE_URL
     - name: Config Database
