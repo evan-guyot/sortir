@@ -38,14 +38,14 @@ jobs:
     - name: Install Dependencies
       run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
     - name: Create and Config Database
+      env:
+        DATABASE_URL: "sqlite:///%kernel:project_dir%/data/database.sqlite"
       run: |
         mkdir -p data
         touch data/database.sqlite
         php bin/console doctrine:database:create --env=test
         php bin/console doctrine:schema:update --env=test --force
     - name: Execute tests (Unit and Feature tests) via PHPUnit
-      env:
-        DATABASE_URL: "sqlite:///%kernel:project_dir%/data/database.sqlite"
       run: vendor/bin/phpunit
     - name: Check Twig Templates
       run: php bin/console lint:twig src
