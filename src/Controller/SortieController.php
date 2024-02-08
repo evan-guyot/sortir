@@ -12,6 +12,7 @@ use App\Repository\InscriptionRepository;
 use App\Repository\SiteRepository;
 use App\Repository\SortieRepository;
 use App\Repository\ParticipantRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,7 +30,9 @@ class SortieController extends AbstractController
         }
 
         $user = $participantRepository->find($this->getUser());
-        $today = new \DateTime();;
+        $today = new \DateTime();
+        $today->setTimezone(new \DateTimeZone('Europe/Paris'));
+
         $sites = $siteRepository->findAll();
 
         $cb1 = $request->query->get('cb1', false);
@@ -92,14 +95,23 @@ class SortieController extends AbstractController
 
         foreach ($sorties as $sortie) {
 
-            $todayDate = $today->format('Y-m-d');
-            $sortieDate = $sortie->getDatedebut()->format('Y-m-d');
+            $todayDate = $today->setTimezone(new \DateTimeZone('Europe/Paris'));
+            $todayDate = $todayDate->format('Y-m-d H:i');
+
+            $sortieDate = $sortie->getDatedebut()->format('Y-m-d H:i');
+
+
+            $dateFin = clone $sortie->getDatedebut();
+            $dateFin->modify('+'.$sortie->getDuree().'minutes');
+            $sortieDateFin = $dateFin->format('Y-m-d H:i');
+
+
             if ($sortie->getEtat()->getLibelle() != 'En création' and $sortie->getEtat()->getLibelle() != 'Annuler') {
 
                 // Comparer les dates
-                if ($todayDate > $sortieDate) {
+                if ($todayDate > $sortieDateFin) {
                     $etat = $etatRepository->getOrMakeEtat('Fermé', $entityManager); // Fermé
-                } elseif ($todayDate == $sortieDate) {
+                } elseif ($todayDate >= $sortieDate && $todayDate <= $sortieDateFin) {
                     $etat = $etatRepository->getOrMakeEtat('En cours', $entityManager); // En cours
                 } else {
                     $etat = $etatRepository->getOrMakeEtat('Ouvert', $entityManager); // Ouvert

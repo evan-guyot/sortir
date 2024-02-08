@@ -97,7 +97,7 @@
             {% for sortie in sorties %}
                 <tr>
                     <td>{{ sortie.nom }}</td>
-                    <td>{{ sortie.datedebut|date('Y-m-d') }}</td>
+                    <td>{{ sortie.datedebut|date('Y-m-d H:i') }}</td>
                     <td>{{ sortie.datecloture|date('Y-m-d') }}</td>
                     <td>{{ sortie.getInscriptions().count() }}/{{ sortie.inscriptionsmax }}</td>
                     <td>{{ sortie.getEtat().libelle }}</td>
