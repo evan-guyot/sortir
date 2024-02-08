@@ -25,6 +25,13 @@ class LieuxController extends AbstractController
             $latitude = $request->request->get('latitude');
             $longitude = $request->request->get('longitude');
 
+
+            if (!is_numeric($latitude) || !is_numeric($longitude)) {
+                $this->addFlash('error', "Veuillez entrer des valeurs numériques valides pour la latitude et la longitude.");
+                return $this->redirectToRoute('app_lieux');
+            }
+
+
             $ville = $villeRepository->find($villeid);
 
             $lieu = new Lieu();
