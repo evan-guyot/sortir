@@ -165,6 +165,7 @@ class SortieController extends AbstractController
             'site_form' => $siteForm
         ]);
     }
+
     #[Route('/sortie/display/{id}', name: 'app_sortie_display_id')]
     public function display(Request $request, SortieRepository $sortieRepository, EtatRepository $etatRepository, EntityManagerInterface $entityManager, int $id): Response
     {
@@ -223,17 +224,23 @@ class SortieController extends AbstractController
 
         if ($sortieForm->isSubmitted()) {
             if ($sortieForm->isValid()) {
-                $etatValue = $sortieForm->getClickedButton()->getName() === 'publier' ? 'Ouvert' : 'En création';
+                if ($sortie->getDatecloture() > $sortie->getDatedebut()) {
+                    $this->addFlash("error", "La date de cloture ne peut pas être supérieure à la date de début de sortie");
+                    return $this->redirectToRoute('app_sortie_modify', ['id' => $id]);
 
-                $etat = $etatRepository->getOrMakeEtat($etatValue, $entityManager);
-                $sortie->setEtat($etat);
-                $entityManager->persist($sortie->getLieu());
-                $entityManager->persist($sortie);
-                $entityManager->flush();
+                } else {
+                    $etatValue = $sortieForm->getClickedButton()->getName() === 'publier' ? 'Ouvert' : 'En création';
 
-                $this->addFlash("success", "Votre sortie à bien été modifiée");
+                    $etat = $etatRepository->getOrMakeEtat($etatValue, $entityManager);
+                    $sortie->setEtat($etat);
+                    $entityManager->persist($sortie->getLieu());
+                    $entityManager->persist($sortie);
+                    $entityManager->flush();
 
-                return $this->redirectToRoute('app_sortie');
+                    $this->addFlash("success", "Votre sortie à bien été modifiée");
+
+                    return $this->redirectToRoute('app_sortie');
+                }
             } else {
                 $this->addFlash("error", "Merci de remplir correctement tous les champs");
             }
