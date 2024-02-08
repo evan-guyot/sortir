@@ -38,7 +38,7 @@ class ParticipantTest extends KernelTestCase
         ]);
 
         self::assertNotNull($insertedProduct);
-        self::assertEquals('NomParticipant', $insertedProduct->getNom());
+        self::assertEquals('WrongParticipant', $insertedProduct->getNom());
         self::assertEquals('PrenomParticipant', $insertedProduct->getPrenom());
     }
 }
