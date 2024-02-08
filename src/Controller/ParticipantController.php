@@ -34,11 +34,14 @@ class ParticipantController extends AbstractController
     public function enable(Request $request, ParticipantRepository $participantRepository): Response
     {
         $userId = $request->get('userId');
-        $participantRepository->enable($userId, $participantRepository);
+        $participantRepository->enable($userId);
 
         return $this->redirectToRoute('app_participants');
     }
 
+    /**
+     * @throws \Exception
+     */
     #[Route('/delete', "app_participant_delete")]
     public function delete(Request $request, ParticipantRepository $participantRepository): Response
     {

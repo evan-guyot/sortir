@@ -72,15 +72,19 @@ class SecurityController extends AbstractController
                 return $this->redirectToRoute("app_register");
             }
 
-            $user->setRoles(["ROLE_USER"]);
+            $roles = array('ROLE_USER');
 
             if($user->isAdministrateur()){
-                $user->setRoles(["ROLE_ADMIN"]);
+                $roles[] = 'ROLE_ADMIN';
             }
 
             if($user->isActif()){
-                $user->setRoles(["ROLE_ACTIVE"]);
+                $roles[] = 'ROLE_ACTIVE';
+            } else {
+                $roles[] = 'ROLE_INACTIVE';
             }
+
+            $user->setRoles($roles);
 
             $user->setMotdepasse(
                 $userPasswordHasher->hashPassword(
