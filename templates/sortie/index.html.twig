@@ -113,7 +113,7 @@
                     </td>
                     <td class="disp-cont txt-start Layout-row-start-center">
                         {% if sortie.getEtat().libelle != 'En création' %}
-                            <a href="{{ path('app_sortie_display_id', {'id': sortie.id}) }}" class="form-control btn w-8" aria-current="page">Afficher</a>
+                            <a href="{{ path('app_sortie_display_id', {'id': sortie.id}) }}" class="btn-primary form-control btn w-8" aria-current="page">Afficher</a>
                         {% endif %}
 
                         {% if (user.id == sortie.getOrganisateur().id and sortie.getEtat().libelle == 'Ouvert') or (sortie.getEtat().libelle == 'Ouvert' and user.isAdministrateur()) %}
