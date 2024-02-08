@@ -45,6 +45,8 @@ jobs:
 #      run: |
 #        ls -l $GITHUB_WORKSPACE
 #        ls -l $GITHUB_WORKSPACE/data
+    - name: Debug DATABASE_URL
+      run: echo $DATABASE_URL
     - name: Config Database
       env:
         DATABASE_URL: "sqlite:///$GITHUB_WORKSPACE/data/database.sqlite"
