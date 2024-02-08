@@ -43,8 +43,8 @@ jobs:
         touch $GITHUB_WORKSPACE/data/database.sqlite
     - name: Config Database
       run: |
-        php bin/console doctrine:database:create --env=test --env-file=.env.test 
-        php bin/console doctrine:schema:update --env=test --force --env-file=.env.test
+        php bin/console doctrine:database:create --env=test --no-interaction --env-vars 
+        php bin/console doctrine:schema:update --env=test --force --no-interaction --env-vars
     - name: Execute tests (Unit and Feature tests) via PHPUnit
       run: vendor/bin/phpunit
     - name: Check Twig Templates
