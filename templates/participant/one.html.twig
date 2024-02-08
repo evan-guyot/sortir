@@ -9,30 +9,40 @@
 {% endblock %}
 
 {% block body %}
+    <div class="encadrement">
     {% if participant is defined and participant is not null %}
-
-        <div>
-<div class="py-5 text-center">
-    <h2>{{ participant.getPseudo() }}</h2>
-</div>
-<div class="row g-5 w-50 p-3 m-auto">
-    <div class="col-md-5 col-lg-4 order-md-last">
-            <p>Prénom : {{ participant.getPrenom() }}</p>
-            <p>Nom : {{ participant.getNom() }}</p>
-            <p>Téléphone : {{ participant.getTelephone() is not null ? participant.getTelephone() : 'aucun'  }}</p>
-            <p>Email : {{ participant.getMail() }}</p>
-            <p>Ville de rattachement : {{ participant.getSite().nom }}</p>
+        <div class="py-5 text-center">
+            <h2>{{ participant.getPseudo() }}</h2>
         </div>
-    <div class="col-md-7 col-lg-8">
-        {% if participant.getImage() %}
-            <img src="data:image;base64,{{ participant.getImage().getContenu() }}" alt="{{ participant.getImage().getNom() }}">
-        {% endif %}
-    </div>
-</div></div>
+        {#<div class="row g-5 w-50 p-3 m-auto">#}
+        <div class="container" >
+            <div class="row">
+                <div class="col-md-4 offset-md-1 mt-1">
+                    {% if participant.getImage() %}
+                        <div class="border border-dark p-3">
+                            <img src="data:image;base64,{{ participant.getImage().getContenu() }}" alt="{{ participant.getImage().getNom() }}" style="width: 300px; height: auto;" class="img-fluid rounded">
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-6 offset-md-1 mt-4 paragraph-profil">
+                    <p>Prénom : {{ participant.getPrenom() }}</p>
+                    <p>Nom : {{ participant.getNom() }}</p>
+                    <p>Téléphone : {{ participant.getTelephone() is not null ? participant.getTelephone() : 'aucun'  }}</p>
+                    <p>Email : {{ participant.getMail() }}</p>
+                    <p>Ville de rattachement : {{ participant.getSite().nom }}</p>
+                </div>
+            </div>
+        </div>
     {% else %}
         <div class="py-5 text-center">
             <h2>Participant non trouvé</h2>
         </div>
     {% endif %}
+    <br>
+    <div align="center">
+        <a type="submit" href="{{ path('app_sortie') }}" class="btn btn-primary">Retour</a>
+    </div>
+        <br>
+    </div>
 
 {% endblock %}
