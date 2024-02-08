@@ -105,9 +105,7 @@ class SortieController extends AbstractController
             $dateFin->modify('+'.$sortie->getDuree().'minutes');
             $sortieDateFin = $dateFin->format('Y-m-d H:i');
 
-//            dump($todayDate);
-//            dump($sortieDate);
-//            dump($sortieDateFin);
+
             if ($sortie->getEtat()->getLibelle() != 'En création' and $sortie->getEtat()->getLibelle() != 'Annuler') {
 
                 // Comparer les dates
