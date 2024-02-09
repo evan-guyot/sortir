@@ -2,23 +2,39 @@
 
 {% set showNavbar = true %}
 
+{#{% block javascripts %}#}
+{#    <script>#}
+{#        document.addEventListener('DOMContentLoaded', function() {#}
+{#            var errorMessage = '{{ error_message | default('') | raw }}';#}
+{#            if (errorMessage) {#}
+{#                alert(errorMessage);#}
+{#                window.history.back();#}
+{#                // Empêcher la soumission du formulaire#}
+{#                document.getElementById("profilForm").addEventListener("submit", function(event) {#}
+{#                    event.preventDefault();#}
+{#                });#}
+{#            }#}
+{#        });#}
+{#    </script>#}
+{#{% endblock %}#}
+
 {% block title %}Mon profil{% endblock %}
 
 {% block body %}
     <div class="container">
         <div class="row align-items-center justify-content-center">
-            <div class="col-md-3 offset-md-1 mt-1">
+            <div class="col-md-4 offset-md-1 mt-1">
                 {% if participant.getImage() %}
                     <div class="border border-dark p-3">
                         <img src="data:image;base64,{{ participant.getImage().getContenu() }}" alt="{{ participant.getImage().getNom() }}" class="img-fluid rounded">
                     </div>
                 {% endif %}
             </div>
-            <div class="col-md-6 offset-md-2 mt-1">
+            <div class="col-md-5 offset-md-2 mt-4">
                 <div class="text-center">
                     <h1>Mon profil</h1>
                     <br>
-                    {{ form_start(profilForm) }}
+                    {{ form_start(profilForm, {'attr': {'id': 'profilForm'}}) }}
                     {{ form_row(profilForm.pseudo) }}
                     {{ form_row(profilForm.prenom) }}
                     {{ form_row(profilForm.nom) }}
@@ -37,17 +53,7 @@
             </div>
         </div>
     </div>
+
 {% endblock %}
 
-{% block javascripts %}
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var errorMessage = '{{ error_message | default('') | raw }}';
-            if (errorMessage) {
-                alert(errorMessage);
-                window.history.back();
-            }
-        });
-    </script>
-{% endblock %}
 
