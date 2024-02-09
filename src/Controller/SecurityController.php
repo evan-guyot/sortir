@@ -127,11 +127,8 @@ class SecurityController extends AbstractController
             if ($csvFile) {
 
                 if ($csvFile->getClientOriginalExtension() !== 'csv') {
-                    $errorMessage = 'Le fichier doit être un fichier CSV.';
-                    return $this->render('security/register_file.html.twig', [
-                        'form' => $form->createView(),
-                        'error_message' => $errorMessage,
-                    ]);
+                    $this->addFlash("error", "Le fichier doit être un fichier CSV.");
+                    return $this->redirectToRoute('app_register_file');
                 }
 
                 $csvFilePath = $csvFile->getRealPath();
@@ -145,8 +142,6 @@ class SecurityController extends AbstractController
                     $headers = explode(';', $recordString);
                     $dataValues = explode(';', $dataString);
                     $dataAssociative = array_combine($headers, $dataValues);
-
-//                    dd($dataAssociative);
 
                     $siteId = $dataAssociative['site_id'];
                     $pseudo = $dataAssociative['pseudo'];
@@ -187,16 +182,12 @@ class SecurityController extends AbstractController
                     $user->setActif($actif);
                     $user->setImage($image);
 
-//                    dd($user);
                     $entityManager->persist($user);
                     $entityManager->flush();
                 }
 
-                $successMessage = 'Utilisateurs importés avec succès!';
-                return $this->render('security/register_file.html.twig', [
-                    'form' => $form->createView(),
-                    'success_message' => $successMessage,
-                ]);
+                $this->addFlash("success", "Utilisateurs importés avec succès !");
+                return $this->redirectToRoute('app_register_file');
             }
         }
 
