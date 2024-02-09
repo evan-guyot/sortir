@@ -29,13 +29,19 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('app_lieux') }}">Lieux</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_ville') }}">Villes</a>
+                    </li>
                     {% if showExtendedNavbar is defined and showExtendedNavbar %}
 
+                    {% endif %}
+
+                    {% if "ROLE_ADMIN" in app.user.getRoles() %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ path('app_ville') }}">Villes</a>
+                            <a class="nav-link" href={{ path('app_participants') }}>Administration</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Sites</a>
+                            <a class="nav-link" href={{ path('app_register') }}>Ajouter compte</a>
                         </li>
                     {% endif %}
 

@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-
+{% set showExtendedNavbar = true %}
 {% block title %}
     Liste des utilisateurs
 {% endblock %}
@@ -21,13 +21,13 @@
                         <td>
                             <form action="{{ path('app_participant_disable') }}" method="post">
                                 <input type="hidden" name="userId" value="{{ participant.getId() }}">
-                                <button type="submit">Désactiver</button>
+                                <button class="btn btn-warning" type="submit">Désactiver</button>
                             </form>
                         </td>
                         <td>
                             <form id="deleteForm{{ participant.getId() }}" action="{{ path('app_participant_delete') }}" method="post">
                                 <input type="hidden" name="userId" value="{{ participant.getId() }}">
-                                <button type="button" onclick="confirmDelete()">Supprimer</button>
+                                <button class="btn btn-danger" type="button" onclick="confirmDelete({{ participant.getId() }})">Supprimer</button>
                             </form>
                         </td>
                     </tr>

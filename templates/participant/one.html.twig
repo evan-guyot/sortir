@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-
+{% set showExtendedNavbar = true %}
 {% block title %}
     {% if participant is defined and participant is not null %}
         Profil de {{ participant.getPseudo() }}

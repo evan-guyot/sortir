@@ -81,7 +81,6 @@ class ParticipantRepository extends ServiceEntityRepository
         if (!$user) {
             throw new \Exception("Participant with id $id not found.");
         }
-
         $this->getEntityManager()->remove($user);
         $this->getEntityManager()->flush();
     }

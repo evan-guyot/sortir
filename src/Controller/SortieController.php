@@ -12,6 +12,7 @@ use App\Repository\InscriptionRepository;
 use App\Repository\SiteRepository;
 use App\Repository\SortieRepository;
 use App\Repository\ParticipantRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,7 +30,9 @@ class SortieController extends AbstractController
         }
 
         $user = $participantRepository->find($this->getUser());
-        $today = new \DateTime();;
+        $today = new \DateTime();
+        $today->setTimezone(new \DateTimeZone('Europe/Paris'));
+
         $sites = $siteRepository->findAll();
 
         $cb1 = $request->query->get('cb1', false);
@@ -92,14 +95,23 @@ class SortieController extends AbstractController
 
         foreach ($sorties as $sortie) {
 
-            $todayDate = $today->format('Y-m-d');
-            $sortieDate = $sortie->getDatedebut()->format('Y-m-d');
+            $todayDate = $today->setTimezone(new \DateTimeZone('Europe/Paris'));
+            $todayDate = $todayDate->format('Y-m-d H:i');
+
+            $sortieDate = $sortie->getDatedebut()->format('Y-m-d H:i');
+
+
+            $dateFin = clone $sortie->getDatedebut();
+            $dateFin->modify('+'.$sortie->getDuree().'minutes');
+            $sortieDateFin = $dateFin->format('Y-m-d H:i');
+
+
             if ($sortie->getEtat()->getLibelle() != 'En création' and $sortie->getEtat()->getLibelle() != 'Annuler') {
 
                 // Comparer les dates
-                if ($todayDate > $sortieDate) {
+                if ($todayDate > $sortieDateFin) {
                     $etat = $etatRepository->getOrMakeEtat('Fermé', $entityManager); // Fermé
-                } elseif ($todayDate == $sortieDate) {
+                } elseif ($todayDate >= $sortieDate && $todayDate <= $sortieDateFin) {
                     $etat = $etatRepository->getOrMakeEtat('En cours', $entityManager); // En cours
                 } else {
                     $etat = $etatRepository->getOrMakeEtat('Ouvert', $entityManager); // Ouvert
@@ -165,6 +177,7 @@ class SortieController extends AbstractController
             'site_form' => $siteForm
         ]);
     }
+
     #[Route('/sortie/display/{id}', name: 'app_sortie_display_id')]
     public function display(Request $request, SortieRepository $sortieRepository, EtatRepository $etatRepository, EntityManagerInterface $entityManager, int $id): Response
     {
@@ -223,17 +236,23 @@ class SortieController extends AbstractController
 
         if ($sortieForm->isSubmitted()) {
             if ($sortieForm->isValid()) {
-                $etatValue = $sortieForm->getClickedButton()->getName() === 'publier' ? 'Ouvert' : 'En création';
+                if ($sortie->getDatecloture() > $sortie->getDatedebut()) {
+                    $this->addFlash("error", "La date de cloture ne peut pas être supérieure à la date de début de sortie");
+                    return $this->redirectToRoute('app_sortie_modify', ['id' => $id]);
 
-                $etat = $etatRepository->getOrMakeEtat($etatValue, $entityManager);
-                $sortie->setEtat($etat);
-                $entityManager->persist($sortie->getLieu());
-                $entityManager->persist($sortie);
-                $entityManager->flush();
+                } else {
+                    $etatValue = $sortieForm->getClickedButton()->getName() === 'publier' ? 'Ouvert' : 'En création';
 
-                $this->addFlash("success", "Votre sortie à bien été modifiée");
+                    $etat = $etatRepository->getOrMakeEtat($etatValue, $entityManager);
+                    $sortie->setEtat($etat);
+                    $entityManager->persist($sortie->getLieu());
+                    $entityManager->persist($sortie);
+                    $entityManager->flush();
 
-                return $this->redirectToRoute('app_sortie');
+                    $this->addFlash("success", "Votre sortie à bien été modifiée");
+
+                    return $this->redirectToRoute('app_sortie');
+                }
             } else {
                 $this->addFlash("error", "Merci de remplir correctement tous les champs");
             }
