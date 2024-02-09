@@ -19,26 +19,37 @@ class ModifierMonMotDePasseController extends AbstractController
         $this->entityManager = $entityManager;
         $this->passwordHasher = $passwordHasher;
     }
-
     #[Route('/modificationmotdepasse', name: 'modifier_mon_mot_de_passe')]
     public function modifierMonMotDePasse(Request $request, UserPasswordHasherInterface $passwordHasher, ParticipantRepository $participantRepository)
     {
         $participant = $participantRepository->find($this->getUser());
 
+        $mdpInitial = $participant->getMotdepasse();
+
         $mdpForm = $this->createForm(ModifierMonMotDePasseType::class, $participant);
 
         $mdpForm->handleRequest($request);
 
-        if ($mdpForm->isSubmitted() && $mdpForm->isValid()) {
-            $participant->setMotdepasse(
-                $passwordHasher->hashPassword(
-                    $participant,
-                    $participant->getPassword()
-                )
-            );
-            $this->entityManager->flush();
-
-            return $this->redirectToRoute('gestion_mon_profil');
+        if ($mdpForm->isSubmitted()) {
+            if ($mdpForm->isValid()) {
+                if (strlen($participant->getPassword()) >= 6) {
+                    $participant->setMotdepasse(
+                        $passwordHasher->hashPassword(
+                            $participant,
+                            $participant->getPassword()
+                        )
+                    );
+                    $this->entityManager->flush();
+                    return $this->redirectToRoute('gestion_mon_profil');
+                } else {
+                    $participant->setMotdepasse($mdpInitial);
+                    $this->addFlash("error", "Le mot de passe doit contenir au minimum 6 caractères.");
+                    return $this->redirectToRoute('modifier_mon_mot_de_passe');
+                }
+            } else {
+                $this->addFlash("error", "Les mots de passes doivent correspondre entre eux.");
+                return $this->redirectToRoute('modifier_mon_mot_de_passe');
+            }
         }
 
         return $this->render('modifier_mon_mot_de_passe/index.html.twig', [

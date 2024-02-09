@@ -7,7 +7,8 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ModifierMonMotDePasseType extends AbstractType
 {
@@ -20,7 +21,7 @@ class ModifierMonMotDePasseType extends AbstractType
             'invalid_message' => "Les mots de passe doivent correspondre.",
             'options' => ['attr' => ['class' => 'password-field']],
             'first_options'  => ['label' => 'Nouveau mot de passe :'],
-            'second_options' => ['label' => 'Confirmer le mot de passe :']
+            'second_options' => ['label' => 'Confirmer le mot de passe :'],
             ]);
     }
 

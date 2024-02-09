@@ -23,6 +23,7 @@ class GestionMonProfilController extends AbstractController
     #[Route('/monprofil', name: 'gestion_mon_profil')]
     public function gestionProfil(Request $request, EntityManagerInterface $entityManager, ParticipantRepository $participantRepository)
     {
+        $errorMessage = "";
         $participant = $participantRepository->find($this->getUser());
 
         $profilForm = $this->createForm(GestionMonProfilType::class, $participant);
@@ -44,12 +45,8 @@ class GestionMonProfilController extends AbstractController
                 $imageName = $imageFile->getClientOriginalName();
 
                 if (strlen($imageName) > 50) {
-                    $errorMessage = "Le nom de l\'image est trop long, 50 caractères maximum. Veuillez la renommer ou en choisir une autre.";
-                    return $this->render('gestion_mon_profil/index.html.twig', [
-                        'profilForm' => $profilForm->createView(),
-                        'site' => $sites,
-                        'error_message' => $errorMessage
-                    ]);
+                    $this->addFlash("error", "Le nom de l\'image est trop long, 50 caractères maximum. Veuillez la renommer ou en choisir une autre.");
+                    return $this->redirectToRoute('gestion_mon_profil');
                 }
 
                 $imageBase64 = base64_encode(file_get_contents($imageFile->getPathname()));
@@ -63,30 +60,28 @@ class GestionMonProfilController extends AbstractController
 
                 $participant->setImage($imageEntity);
             }
-                // Vérifier si le pseudo a été modifié et si il est déja existant
+
             $pseudoActuel = $participant->getPseudo();
             if ($pseudoActuel !== $pseudoInitial) {
                 $existingParticipant = $entityManager->getRepository(Participant::class)->findOneBy(['pseudo' => $pseudoActuel]);
                 if ($existingParticipant) {
-                    $errorMessage = 'Le pseudo saisi est déjà utilisé. Veuillez en choisir un autre.';
-                    return $this->render('gestion_mon_profil/index.html.twig', [
-                        'profilForm' => $profilForm->createView(),
-                        'site' => $sites,
-                        'error_message' => $errorMessage,
-                    ]);
+//                    $errorMessage .= 'Le pseudo saisi est déjà utilisé. Veuillez en choisir un autre.';
+//                    return $this->redirectToRoute('gestion_mon_profil');
+                    $participant->setPseudo($pseudoInitial);
+                    $this->addFlash("error", "Le pseudo saisi est déjà utilisé. Veuillez en choisir un autre.");
+                    return $this->redirectToRoute('gestion_mon_profil');
                 }
             }
-
             $this->entityManager->persist($participant);
             $this->entityManager->flush();// Enregistre les modifications dans la base de données
+            $this->addFlash("success", "Vos modifications ont bien été enregistrées");
             return $this->redirectToRoute('gestion_mon_profil');
         }
 
-        // Afficher le formulaire
         return $this->render('gestion_mon_profil/index.html.twig', [
             'profilForm' => $profilForm->createView(),
             'site' => $sites,
-            'error_message' => null,
+//            'error_message' => $errorMessage,
             'participant' => $participant
         ]);
     }

@@ -5,29 +5,18 @@
 {% block title %}Modification de mon mot de passe{% endblock %}
 
 {% block body %}
-    <div align="center">
+    <div class="encadrement-mdp">
+        <br>
         <h2>Modification de mon mot de passe</h2>
         <br>
         {{ form_start(mdpForm) }}
         {{ form_row(mdpForm.motdepasse.first) }}
         {{ form_row(mdpForm.motdepasse.second) }}
         <br>
-        <button type="submit" class="btn btn-primary">Valider</button>
+        <button type="submit" class="btn btn-primary me-2">Valider</button>
+        <span class="mx-3"></span>
         <a type="submit" href="{{ path('gestion_mon_profil') }}">Annuler</a>
         {{ form_end(mdpForm) }}
+        <br>
     </div>
-
-    {% if error_message is defined %}
-        <script>
-            // Récupérer le message d'erreur s'il est défini
-            var errorMessage = '{{ error_message }}';
-
-            // Vérifier si le message d'erreur est défini et non vide
-            if (errorMessage && errorMessage !== '') {
-                // Afficher une alerte pop-up avec le message d'erreur
-                alert(errorMessage);
-            }
-        </script>
-    {% endif %}
-
 {% endblock %}

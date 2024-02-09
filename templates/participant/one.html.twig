@@ -9,10 +9,10 @@
 {% endblock %}
 
 {% block body %}
-    <div class="encadrement">
+    <div class="encadrement-profil">
     {% if participant is defined and participant is not null %}
         <div class="py-5 text-center">
-            <h2>{{ participant.getPseudo() }}</h2>
+            <h2 style="text-decoration: underline;">{{ participant.getPseudo() }}</h2>
         </div>
         {#<div class="row g-5 w-50 p-3 m-auto">#}
         <div class="container" >
