@@ -39,11 +39,13 @@ jobs:
       run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
     - name: Create Database
       run: |
-        mkdir -p data
-        touch data/database.sqlite
+        mkdir -p $GITHUB_WORKSPACE/data
+        touch $GITHUB_WORKSPACE/data/database.sqlite
+    - name: Config Database
+      run: |
+        php bin/console doctrine:database:create --env=test --no-interaction
+        php bin/console doctrine:schema:update --env=test --force --no-interaction
     - name: Execute tests (Unit and Feature tests) via PHPUnit
-      env:
-        DATABASE_URL: sqlite:///%kernel.project_dir%/data/database.sqlite
       run: vendor/bin/phpunit
     - name: Check Twig Templates
       run: php bin/console lint:twig src
